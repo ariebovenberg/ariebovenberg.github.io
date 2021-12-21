@@ -9,7 +9,7 @@ url: "https://arie.bovenberg.net"
 author:
   name: Arie Bovenberg
   email: arie@bovenberg.net
-show_excerpts: false # set to true to show excerpts on the homepage
+show_excerpts: true
 minima:
   # skin: dark
   skin: classic
@@ -19,6 +19,15 @@ minima:
     linkedin: ariebovenberg
     # devto: ariebovenberg
     # twitter: ariebovenberg
+
+# Minima: custom header links
+header_pages:
+  - _pages/frontpage.md
+  - _pages/about.md
+  - _pages/archive.md
+
+include:
+  - _pages
 
 google_analytics: "297234170"
 permalink: /:title/
@@ -40,16 +49,9 @@ plugins:
 # Excluded items can be processed by explicitly listing the directories or
 # their entries' file path in the `include:` list.
 #
-# exclude:
-#   - .sass-cache/
-#   - .jekyll-cache/
-#   - gemfiles/
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules/
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
-#
-
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - .gitignore
+  - LICENSE
+  - README.md

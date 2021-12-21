@@ -1,6 +1,6 @@
 # My site (under construction)
 
-# Development
+## Development
 
 On MacOS:
 
@@ -18,8 +18,20 @@ rbenv local 3.0.3
 gem install bundler jekyll
 ```
 
-# Updating
+### Updating
 
 ```bash
 bundle update github-pages
 ```
+
+## Resources
+
+- https://dfederm.com/creating-a-blog-using-github-pages/
+- https://github.com/jekyll/minima
+- https://github.com/jsanz/gh-pages-minima-starter
+- https://blog.slowb.ro/dark-theme-for-minima-jekyll/
+
+## Ideas
+
+- Categories page
+- Automatic dark mode
