@@ -1,33 +1,31 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely edit after that. If you find
-# yourself editing this file very often, consider using Jekyll's data files
-# feature for the data you need to update frequently.
-#
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
-#
-# If you need help with YAML syntax, here are some quick references for you:
-# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
-# https://learnxinyminutes.com/docs/yaml/
-#
-# Site settings
-# These are used to personalize your new site. If you look in the HTML files,
-# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
-# You can create any custom variable you would like, and they will be accessible
-# in the templates via {{ site.myvariable }}.
-
 title: Arie's blog
-email: null
-description: My programming blog.
+description: >
+  My programming blog where I write about Python, functional programming,
+  and API design.
 baseurl: "/dev/blog"
 url: "https://arie.bovenberg.net"
-twitter_username: null
-github_username:  ariebovenberg
 
-# Build settings
-theme: minima
+# Theme
+author:
+  name: Arie Bovenberg
+  email: arie@bovenberg.net
+show_excerpts: false # set to true to show excerpts on the homepage
+minima:
+  # skin: dark
+  skin: classic
+  date_format: "%b %-d, %Y"
+  social_links:
+    github:  ariebovenberg
+    linkedin: ariebovenberg
+    # devto: ariebovenberg
+    # twitter: ariebovenberg
+
+google_analytics: "297234170"
+permalink: /:title/
+markdown: kramdown
+paginate_path: "/:num/"
+date_format: "%b %-d, %Y"
+
 plugins:
   - jekyll-feed
   - jekyll-paginate
@@ -55,10 +53,3 @@ plugins:
 #   - vendor/ruby/
 #
 
-# Site settings
-google_analytics: "297234170"
-permalink: /:title/
-markdown: kramdown
-paginate: 5
-paginate_path: "/:num/"
-date_format: "%b %-d, %Y"
