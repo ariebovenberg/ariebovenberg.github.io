@@ -2,8 +2,8 @@ title: Arie's blog
 description: >
   My programming blog where I write about Python, functional programming,
   and API design.
-baseurl: "/dev/blog"
-url: "https://arie.bovenberg.net"
+baseurl: ""
+url: "https://ariebovenberg.github.io"
 
 # Theme
 author:
@@ -34,6 +34,9 @@ permalink: /:title/
 markdown: kramdown
 paginate_path: "/:num/"
 date_format: "%b %-d, %Y"
+
+disqus:
+  shortname: my_disqus_shortname
 
 plugins:
   - jekyll-feed
