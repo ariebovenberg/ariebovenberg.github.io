@@ -27,7 +27,7 @@ header_pages:
 include:
   - _pages
 
-google_analytics: "297234170"
+google_analytics: "G-0B2WZJQ5RK"
 permalink: /:title/
 markdown: kramdown
 paginate_path: "/:num/"
