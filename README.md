@@ -35,3 +35,4 @@ bundle update github-pages
 
 - Categories page
 - Automatic dark mode
+- jekyll remote theme
