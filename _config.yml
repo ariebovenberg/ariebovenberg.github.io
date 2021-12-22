@@ -2,7 +2,7 @@ title: Arie's blog
 description: >
   My programming blog where I write about Python, functional programming,
   and API design.
-baseurl: ""
+baseurl: "/"
 url: "https://ariebovenberg.github.io"
 
 # Theme
