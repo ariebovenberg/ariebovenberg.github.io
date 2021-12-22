@@ -17,15 +17,16 @@ layout: default
           {{ mdate | date: date_format }}
         </time>
       {%- endif -%}
-      <span>• {% include read_time.html post=page %}</span>
-      <span>• <a href="#disqus_thread">discuss</a> </span>
       {%- if page.author -%}
         • {% for author in page.author %}
           <span itemprop="author" itemscope itemtype="http://schema.org/Person">
             <span class="p-author h-card" itemprop="name">{{ author }}</span></span>
             {%- if forloop.last == false %}, {% endif -%}
         {% endfor %}
-      {%- endif -%}</p>
+      {%- endif -%}
+      <span> • {% include read_time.html post=page %}</span>
+      <span>• <a href="#disqus_thread">discuss</a> </span>
+    </p>
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
