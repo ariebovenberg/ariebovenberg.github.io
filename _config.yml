@@ -1,18 +1,16 @@
 title: Arie's blog
 description: >
-  My programming blog where I write about Python, functional programming,
-  and API design.
+  My programming blog
 baseurl: "/"
 url: "https://ariebovenberg.github.io"
 
 # Theme
-author:
-  name: Arie Bovenberg
-  email: arie@bovenberg.net
+# author:
+#   name: Arie Bovenberg
+#   email: arie@bovenberg.net
 show_excerpts: true
 minima:
-  # skin: dark
-  skin: classic
+  skin: arie
   date_format: "%b %-d, %Y"
   social_links:
     github:  ariebovenberg
