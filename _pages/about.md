@@ -1,9 +1,9 @@
 ---
-layout: page
-title: About me
-permalink: /about/
+layout: default
+title: About
+permalink: /about
 ---
 
-Lorem ipsum...
+Welcome to my website! 
 
-[github profile]: https://github.com/ariebovenberg
+I'm Arie, a software engineer.

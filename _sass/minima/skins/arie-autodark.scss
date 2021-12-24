@@ -1,31 +1,88 @@
 @charset "utf-8";
 
-$brand-color:           #828282 !default;
-$brand-color-light:     lighten($brand-color, 40%) !default;
-$brand-color-dark:      #443742 !default;
+html {
+    @import "minima/skins/arie-light";
+    --brand-color:           #{$brand-color};
+    --brand-color-light:     #{$brand-color-light};
+    --brand-color-dark:      #{$brand-color-dark};
 
-$site-title-color:      $brand-color-dark !default;
+    --site-title-color:      #{$site-title-color};
 
-$text-color:            black !default;
-$background-color:      #fdfdfd !default;
-$code-background-color: floralWhite !default;
+    --text-color:            #{$text-color};
+    --text-color-light:      #{$text-color-light};
+    --background-color:      #{$background-color};
+    --code-background-color: #{$code-background-color};
 
-$link-base-color:       #DB2955 !default;
-$link-visited-color:    darken($link-base-color, 15%) !default;
-$link-hover-color:      $text-color !default;
+    --link-base-color:       #{$link-base-color};
+    --link-visited-color:    #{$link-visited-color};
+    --link-hover-color:      #{$link-hover-color};
 
-$border-color-base:     #828282 !default;
-$border-color-01:       lighten($border-color-base, 40%) !default;
-$border-color-02:       lighten($brand-color, 35%) !default;
-$border-color-03:       $brand-color-dark !default;
+    --border-color-01:       #{$border-color-01};
+    --border-color-02:       #{$border-color-02};
+    --border-color-03:       #{$border-color-03};
 
-$table-text-color:      lighten($text-color, 18%) !default;
-$table-zebra-color:     lighten($brand-color, 46%) !default;
-$table-header-bg-color: lighten($brand-color, 43%) !default;
-$table-header-border:   lighten($brand-color, 37%) !default;
-$table-border-color:    $border-color-01 !default;
+    --table-text-color:      #{$table-text-color};
+    --table-zebra-color:     #{$table-zebra-color};
+    --table-header-bg-color: #{$table-header-bg-color};
+    --table-header-border:   #{$table-header-border};
+    --table-border-color:    #{$table-border-color};
+}
 
-$code-font-family: "Roboto Mono", monospace;
+@media (prefers-color-scheme: dark) {
+  html {
+    @import "minima/skins/arie-dark";
+    --brand-color:           #{$brand-color};
+    --brand-color-light:     #{$brand-color-light};
+    --brand-color-dark:      #{$brand-color-dark};
+
+    --site-title-color:      #{$site-title-color};
+
+    --text-color:            #{$text-color};
+    --text-color-light:      #{$text-color-light};
+    --background-color:      #{$background-color};
+    --code-background-color: #{$code-background-color};
+
+    --link-base-color:       #{$link-base-color};
+    --link-visited-color:    #{$link-visited-color};
+    --link-hover-color:      #{$link-hover-color};
+
+    --border-color-01:       #{$border-color-01};
+    --border-color-02:       #{$border-color-02};
+    --border-color-03:       #{$border-color-03};
+
+    --table-text-color:      #{$table-text-color};
+    --table-zebra-color:     #{$table-zebra-color};
+    --table-header-bg-color: #{$table-header-bg-color};
+    --table-header-border:   #{$table-header-border};
+    --table-border-color:    #{$table-border-color};
+  }
+}
+
+
+$brand-color:           var(--brand-color);
+$brand-color-light:     var(--brand-color-light);
+$brand-color-dark:      var(--brand-color-dark);
+
+$site-title-color:      var(--site-title-color);
+
+$text-color:            var(--text-color);
+$text-color-light:      var(--text-color-light);
+$background-color:      var(--background-color);
+$code-background-color: var(--code-background-color);
+
+$link-base-color:       var(--link-base-color);
+$link-visited-color:    var(--link-visited-color);
+$link-hover-color:      var(--link-hover-color);
+
+$border-color-01:       var(--border-color-01);
+$border-color-02:       var(--border-color-02);
+$border-color-03:       var(--border-color-03);
+
+$table-text-color:      var(--table-text-color);
+$table-zebra-color:     var(--table-zebra-color);
+$table-header-bg-color: var(--table-header-bg-color);
+$table-header-border:   var(--table-header-border);
+$table-border-color:    var(--table-border-color);
 
 
 // Syntax highlighting styles should be adjusted appropriately for every "skin"

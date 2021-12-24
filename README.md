@@ -30,6 +30,7 @@ bundle update github-pages
 - https://github.com/jekyll/minima
 - https://github.com/jsanz/gh-pages-minima-starter
 - https://blog.slowb.ro/dark-theme-for-minima-jekyll/
+- https://github.com/derekkedziora/jekyll-demo
 
 ## Ideas
 
