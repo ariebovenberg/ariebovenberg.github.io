@@ -4,6 +4,8 @@ title: About
 permalink: /about
 ---
 
+# About me
+
 <figure class="my-picture"><img src="/static/images/me.jpeg" alt="Arie Bovenberg smiling" title="Arie Bovenberg">
 </figure>
 
