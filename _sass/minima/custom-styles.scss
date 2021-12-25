@@ -74,3 +74,9 @@ div.home > .page-heading {
     }
   }
 }
+
+.my-picture {
+    float: right;
+    margin: 0 0 5% 5%;
+    width: clamp(100px, 200px, 50%);
+}

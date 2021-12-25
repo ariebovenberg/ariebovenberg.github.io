@@ -5,7 +5,7 @@ layout: default
 title: Blog
 ---
 
-Below is the archive of blog posts.
+# Archive
 
 <ul>
   {% for post in site.posts %}
