@@ -12,5 +12,5 @@ permalink: /about
 I'm Arie, a Dutch-American software engineer living in The Netherlands.
 I'm a functional programming enthousiast, passionate about good code.
 
-Away from the keyboard, I enjoy all sorts of geekery such as board games,
-science-fiction, and history podcasts.
+Away from the keyboard, I enjoy all sorts of geekery such as boardgames,
+science fiction, and history podcasts.
