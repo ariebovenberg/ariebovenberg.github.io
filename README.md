@@ -1,4 +1,4 @@
-# My site (under construction)
+# My programming blog
 
 ## Development
 
@@ -24,7 +24,7 @@ gem install bundler jekyll
 bundle update github-pages
 ```
 
-## Resources
+## Resources used
 
 - https://dfederm.com/creating-a-blog-using-github-pages/
 - https://github.com/jekyll/minima
@@ -35,5 +35,4 @@ bundle update github-pages
 ## Ideas
 
 - Categories page
-- Automatic dark mode
 - jekyll remote theme
