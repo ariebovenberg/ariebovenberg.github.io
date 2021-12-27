@@ -5,10 +5,13 @@ date:   2021-12-27
 ---
 
 Following the news on log4j lately,
-you may wonder: is Python's logging library safe?
-After all, there is a potential for injection attacks anywhere string formatting
+you may wonder if Python's logging library is safe.
+After all, there is a potential for injection attacks where string formatting
 meets user input.
-It turns out that logging f-strings may leave you vulnerable to attack.
+Thankfully, Python's logging isn't vulnerable to remote code execution.
+Nonetheless it is still important to be careful with untrusted data.
+In this post I'll go over some common pitfalls,
+and how logging f-strings could — in certain situations — leave you vulnerable to other types of attacks.
 
 ## The basics of logging
 
@@ -33,7 +36,7 @@ Which prints:
 INFO:__main__:hello world
 ```
 
-Let's see the string formatting in action.
+Let's see the string formatting[^1] in action:
 
 ```python
 context = {'user': 'bob', 'msg': 'hello everybody'}
@@ -63,7 +66,7 @@ INFO:__main__:user 'bob' commented: 'hello'.
 INFO:__main__:user 'alice' commented: 'I like pineapple pizza'.
 ```
 
-As you can see, an attacker can not only corrupt logs, but also incriminate others!
+As you can see, an attacker can not only corrupt logs, but also incriminate others.
 
 ### Mitigation
 
@@ -71,7 +74,7 @@ We can mitigate this particular attack by [escaping newline characters](https://
 But, beware that there are plenty of other [evil unicode control characters](https://www.python.org/dev/peps/pep-0672/)
 which can mess up your logs.
 The safest solution is to simply not log untrusted text.
-If you need to keep untrusted text for an audit trail, store it in a database.
+If you need to store it for an audit trail, use a database.
 Alternatively, [structured logging](https://www.structlog.org/en/stable/)
 can prevent newline-based attacks.
 
@@ -82,7 +85,7 @@ Because the old `%`-style formatting used by `logging` is often considered ugly,
 many people prefer to use f-strings:
 
 ```python
-logger.info(f"user '{user}' commented: '{msg}'")
+logger.info(f"user '{user}' commented: '{msg}'.")
 ```
 
 Admittedly this _looks_ nicer, but it won't stop `logging`
@@ -96,7 +99,7 @@ So if the `msg` is...
 ...we are left with this after the f-string evaluates:
 
 ```python
-logger.info("user 'bob' commented: '%(foo)s'")
+logger.info("user 'bob' commented: '%(foo)s'.")
 ```
 
 So what does `logging` do? Does it try to look up `foo` and crash?
@@ -124,9 +127,7 @@ In this case get an error like this:
 
 ```log
 --- Logging error ---
-Traceback (most recent call last):
-   [...snip...]
-    msg = msg % self.args
+[...snip...]
 KeyError: 'foo'
 Call stack:
   File "example.py", line 29, in <module>
@@ -136,10 +137,15 @@ Arguments: {'user': 'bob'}
 ```
 
 Annoying to have in the logs? Yes. Dangerous? Not..._yet_.
+But by formatting an external string into our log message
+(which in turn gets formatted again by `logging`)
+we open the door to [string formatting attacks](https://owasp.org/www-community/attacks/Format_string_attack).
+Thankfully, Python is a lot less vulnerable than C,
+but there are still ways to abuse it.
 
 ### Padding a ton
 
-One possibility is a denial-of-service attack which abuses [string padding syntax](https://pyformat.info/#string_pad_align).
+One such case is abusing [padding syntax](https://pyformat.info/#string_pad_align).
 Consider this message:
 
 ```python
@@ -149,7 +155,9 @@ Consider this message:
 This will pad the `user` with almost a gigabyte of whitespace.
 Not only will this slow your log statement down to a crawl,
 it could also clog up your logging infrastructure.
-You won't even know what hit you.
+
+Why is this a problem? Attackers being able to crash your server is bad enough.
+If they cripple your logging, you wouldn't even know what hit you.
 
 ### Leaky logs
 
@@ -172,13 +180,18 @@ sensitive data to be present in `context`, by [using a message like](https://luc
 "{0.__init__.__globals__['SECRET']}"
 ```
 
+You might wonder what the big deal is if secrets land in the logs
+— it's not in the open, right?
+The problem is that logs are usually a lot easier for an attacker to access
+than a credential store.
+Because of this, CWE ranks _"Insertion of Sensitive Information into Log File"_ as number 39
+on their list of [most dangerous software weaknesses](https://cwe.mitre.org/top25/archive/2021/2021_cwe_top25.html).
+
 ### Mitigation
 
-To eliminate these risks, you should let `logging` handle string formatting.
-Don't format log messages yourself with f-strings or otherwise.
-(Note that using logging's built-in formatting is also
-[better for other reasons](https://dev.to/izabelakowal/what-is-the-best-string-formatting-technique-for-logging-in-python-d1d).)
-There is a [flake8 plugin](https://github.com/globality-corp/flake8-logging-format)
+To eliminate these risks, you should _always_ let `logging` handle string formatting.
+Don't format log messages yourself with f-strings or otherwise [^2].
+Thankfully, there is a [flake8 plugin](https://github.com/globality-corp/flake8-logging-format)
 that can check this for you.
 Also, once [PEP675](https://www.python.org/dev/peps/pep-0675) is implemented,
 you can use a typechecker to check only literal strings are passed to the logger.
@@ -195,3 +208,18 @@ you can use a typechecker to check only literal strings are passed to the logger
 A full sample of the code used can be found
 [here](https://gist.github.com/ariebovenberg/dfd849ddc7a0dc7428a22b5b8a468134),
 so you can experiment for yourself.
+
+### Thanks
+
+To [Daan Debie](https://daan.fyi) for reviewing this post!
+
+[^1]: This may be less well-known, but `logging` supports named formatting
+      when a dictionary is passed as an argument.
+      This is different from the `extra=` parameter!
+      You can see yourself how this works
+      with the `%` operator:
+      `"hello %(name)" % {"name": "bob"}` and `"hello %s" % "bob"`.
+      I'll be focussing on the dictionary approach.
+
+[^2]: Using logging's built-in formatting is also
+      [better for performance, among other reasons](https://dev.to/izabelakowal/what-is-the-best-string-formatting-technique-for-logging-in-python-d1d).
