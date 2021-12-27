@@ -30,8 +30,8 @@ markdown: kramdown
 paginate_path: "/:num/"
 date_format: "%b %-d, %Y"
 
-disqus:
-  shortname: ariebovenbergdevblog
+# disqus:
+#   shortname: ariebovenbergdevblog
 
 plugins:
   - jekyll-feed
@@ -45,3 +45,4 @@ exclude:
   - .gitignore
   - LICENSE
   - README.md
+  - _code
