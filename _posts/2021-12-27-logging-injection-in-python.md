@@ -175,7 +175,9 @@ sensitive data to be present in `context`, by [using a message like](https://luc
 ### Mitigation
 
 To eliminate these risks, you should let `logging` handle string formatting.
-Don't format log messages yourself with f-strings or otherwise [^1].
+Don't format log messages yourself with f-strings or otherwise.
+(Note that using logging's built-in formatting is also
+[better for other reasons](https://dev.to/izabelakowal/what-is-the-best-string-formatting-technique-for-logging-in-python-d1d).)
 There is a [flake8 plugin](https://github.com/globality-corp/flake8-logging-format)
 that can check this for you.
 Also, once [PEP675](https://www.python.org/dev/peps/pep-0675) is implemented,
@@ -190,55 +192,6 @@ you can use a typechecker to check only literal strings are passed to the logger
    In certain situations this could leave you vulnerable to
    denial-of-service attacks or even sensitive data exposure.
 
-### Full code sample
-
-Here is a full sample of the code used, so you can experiment for yourself.
-
-```python
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# basic usage
-logger.info("hello world")
-
-# basic formatting
-context = {
-    "user": "bob",
-    "msg": "hello everybody",
-}
-logger.info("user '%(user)s' commented: '%(msg)s'.", context)
-
-# classic log injection
-context = {
-    "user": "bob",
-    "msg": "hello'.\nINFO:__main__:user 'alice' commented 'I like pineapple pizza",
-}
-logger.info("user '%(user)s' commented: '%(msg)s'.", context)
-
-# f-string double formatting error
-context = {
-    "user": "bob",
-    "msg": (msg := "%(foo)s"),
-}
-logger.info(f"user '%(user)s' commented: '{msg}'.", context)
-
-# DoS attack
-context = {
-    "user": "bob",
-    "msg": (msg := "%(user)999999s"),  # add more nines at your own risk
-}
-logger.info(f"user '%(user)s' commented: '{msg}'.", context)
-
-# secret leakage
-context = {
-    "user": "bob",
-    "msg": (msg := "%(secret)s"),
-    "secret": "hunter2",
-}
-logger.info(f"user '%(user)s' commented: '{msg}'.", context)
-
-```
-
-[^1]: Using logging's built-in formatting is also
-      [better for other reasons](https://dev.to/izabelakowal/what-is-the-best-string-formatting-technique-for-logging-in-python-d1d).
+A full sample of the code used can be found
+[here](https://gist.github.com/ariebovenberg/dfd849ddc7a0dc7428a22b5b8a468134),
+so you can experiment for yourself.
