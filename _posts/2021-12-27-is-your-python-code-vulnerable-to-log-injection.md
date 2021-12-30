@@ -10,8 +10,8 @@ After all, there is a potential for injection attacks where string formatting
 meets user input.
 Thankfully, Python's logging isn't vulnerable to remote code execution.
 Nonetheless it is still important to be careful with untrusted data.
-In this post I'll go over some common pitfalls,
-and how logging f-strings could — in certain situations — leave you vulnerable to other types of attacks.
+This article will describe some common pitfalls,
+and how the popular practice of logging f-strings could — in certain situations — leave you vulnerable to other types of attacks.
 
 ## The basics of logging
 
@@ -172,7 +172,7 @@ an attacker could leak them into the logs with the following message:
 This is particularly dangerous when combined with the padding vulnerability,
 as the attacker could use timing to sniff out which keys are present.
 
-On the flip side, we can be thankful that Python's `%` formatting syntax is so limited.
+On the flip side, we can be thankful that Python's `%`-style formatting syntax is so limited.
 If logging used the new braces-style, an attacker wouldn't even need
 sensitive data to be present in `context`, by [using a message like](https://lucumr.pocoo.org/2016/12/29/careful-with-str-format/):
 
@@ -216,10 +216,11 @@ To [Daan Debie](https://daan.fyi) for reviewing this post!
 [^1]: This may be less well-known, but `logging` supports named formatting
       when a dictionary is passed as an argument.
       This is different from the `extra=` parameter!
-      You can see yourself how this works
+      You can see for yourself how this works
       with the `%` operator:
       `"hello %(name)" % {"name": "bob"}` and `"hello %s" % "bob"`.
-      I'll be focussing on the dictionary approach.
+      In this post I'll be focussing on vulnerabilities when using
+      the dictionary approach.
 
 [^2]: Using logging's built-in formatting is also
       [better for performance, among other reasons](https://dev.to/izabelakowal/what-is-the-best-string-formatting-technique-for-logging-in-python-d1d).

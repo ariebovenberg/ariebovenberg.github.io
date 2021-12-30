@@ -10,7 +10,7 @@ permalink: /about
 </figure>
 
 I'm Arie, a Dutch-American software engineer living in The Netherlands.
-I'm a functional programming enthousiast, passionate about good code.
+I'm a functional-programming enthousiast, passionate about good code.
 
 Away from the keyboard, I enjoy all sorts of geekery such as boardgames,
-science fiction, and history podcasts.
+science fiction, and history.
