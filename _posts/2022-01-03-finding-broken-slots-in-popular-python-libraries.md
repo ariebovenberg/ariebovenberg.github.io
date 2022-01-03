@@ -131,6 +131,12 @@ showed several of them seem to have some classes with broken slots:
 (Note that some may be false positives, or out of date since this post.
 The list is not exhaustive.)
 
+I was actually surprised how many packages _didn't_ have issues.
+This is mostly due to them not having many `__slots__` classes in the first place.
+For example, `requests` has 43 classes, none with slots;
+`azure` has 2391 classes, only 5 with slots.
+I hope tools like `slotscheck` help more libraries adopt slots!
+
 ## What now?
 
 The first version of `slotscheck` is available on PyPI.
