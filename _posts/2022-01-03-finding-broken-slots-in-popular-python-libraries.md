@@ -89,7 +89,7 @@ As you can see, bad `__slots__` inheritance can really bloat your memory footpri
 
 Having built `slotscheck`, I couldn't wait to see what I could find.
 I didn't have to look far:
-I found some (possibly) missing slots [in the standard library](https://bugs.python.org/issue46244).
+I found some missing slots [in the standard library](https://bugs.python.org/issue46244).
 
 Also, a scan of the [5000 most popular PyPI packages](https://hugovk.github.io/top-pypi-packages/)
 showed several of them seem to have some classes with broken slots:
