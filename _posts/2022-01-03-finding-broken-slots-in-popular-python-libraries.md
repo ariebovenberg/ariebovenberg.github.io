@@ -103,8 +103,10 @@ showed several of them seem to have some classes with broken slots:
 - srsly (5)
 - dynaconf (5)
 - falcon (4)
+- glom (4)
 - returns (3) ([solved](https://github.com/dry-python/returns/pull/1147))
 - parso (3)
+- autobahn (3)
 - rx (3)
 - pika (3)
 - boxsdk (3)
@@ -112,6 +114,7 @@ showed several of them seem to have some classes with broken slots:
 - oauthlib (2)
 - xmlschema (2)
 - aiohttp (2)
+- peewee (2)
 - xlrd (2)
 - fiona (2)
 - zeroconf (2)
@@ -123,8 +126,10 @@ showed several of them seem to have some classes with broken slots:
 - Pathy (1)
 - sanic (1)
 - mongoengine (1)
+- requests_html (1)
 
-(Note that some may be false positives, I haven't checked them all.)
+(Note that some may be false positives, or out of date since this post.
+The list is not exhaustive.)
 
 ## What now?
 
