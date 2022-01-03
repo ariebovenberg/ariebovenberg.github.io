@@ -98,6 +98,7 @@ showed several of them seem to have some classes with broken slots:
 - scapy (85)
 - sqlalchemy (12) ([issue opened](https://github.com/sqlalchemy/sqlalchemy/issues/7527))
 - pandas (9) ([issue opened](https://github.com/pandas-dev/pandas/issues/45124))
+- tensorflow_probability (6)
 - torch (5)
 - srsly (5)
 - parso (3)
@@ -121,7 +122,7 @@ showed several of them seem to have some classes with broken slots:
 
 ## What now?
 
-`slotscheck` is available to use.
+The first version of `slotscheck` is available on PyPI.
 Include it in your CI pipeline to prevent slots mistakes from appearing again!
 Check out the GitHub [repo](https://github.com/ariebovenberg/slotscheck/)
 to follow further development, and leave a ⭐️ if you like.
