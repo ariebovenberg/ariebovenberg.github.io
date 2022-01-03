@@ -135,6 +135,7 @@ The list is not exhaustive.)
 
 The first version of `slotscheck` is available on PyPI.
 Include it in your CI pipeline to prevent slots mistakes from appearing again!
+Or, contribute to the community by fixing slots in any of the packages listed above.
 Check out the GitHub [repo](https://github.com/ariebovenberg/slotscheck/)
 to follow further development, and leave a ⭐️ if you like.
 
