@@ -229,4 +229,4 @@ To [Daan Debie](https://daan.fyi) for reviewing this post!
       the dictionary approach.
 
 [^2]: Using logging's built-in formatting is also
-      [better for performance, among other reasons](https://dev.to/izabelakowal/what-is-the-best-string-formatting-technique-for-logging-in-python-d1d).
+      [often better for performance, among other reasons](https://dev.to/izabelakowal/what-is-the-best-string-formatting-technique-for-logging-in-python-d1d).
