@@ -146,7 +146,7 @@ Check out the GitHub [repo](https://github.com/ariebovenberg/slotscheck/)
 to follow further development, and leave a ⭐️ if you like.
 
 [^1]: If you're interested in all the details,
-      there is a great explanation [here](https://stackoverflow.com/a/28059785/9689364).
+      there is a great explanation [here](https://stackoverflow.com/a/28059785).
 
 [^2]: Of course the exact numbers will change depending on how many attributes
       there are, and their type — among other things.
