@@ -213,7 +213,7 @@ so you can experiment for yourself.
 
 I've since created [an issue on the Python bug tracker](https://bugs.python.org/issue46200) 
 to address potential security risks in the logging documentation,
-and perhaps to even create a more secure `logger` API.
+and perhaps even to create a more secure `logger` API.
 
 ### Thanks
 
