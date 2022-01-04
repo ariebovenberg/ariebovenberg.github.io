@@ -209,6 +209,12 @@ A full sample of the code used can be found
 [here](https://gist.github.com/ariebovenberg/dfd849ddc7a0dc7428a22b5b8a468134),
 so you can experiment for yourself.
 
+### Update 2022-01-04
+
+I've since created [an issue on the Python bug tracker](https://bugs.python.org/issue46200) 
+to address potential security risks in the logging documentation,
+and perhaps to even create a more secure `logger` API.
+
 ### Thanks
 
 To [Daan Debie](https://daan.fyi) for reviewing this post!
