@@ -210,7 +210,8 @@ A full sample of the code used can be found
 [here](https://gist.github.com/ariebovenberg/dfd849ddc7a0dc7428a22b5b8a468134),
 so you can experiment for yourself.
 
-You can discuss this post on [reddit](https://www.reddit.com/r/Python/comments/rqaysb/is_your_python_code_vulnerable_to_log_injection/).
+You can discuss this post on [reddit](https://www.reddit.com/r/Python/comments/rqaysb/is_your_python_code_vulnerable_to_log_injection/)
+or [Hacker News](https://news.ycombinator.com/item?id=29803530).
 
 ### Update 2022-01-04
 
