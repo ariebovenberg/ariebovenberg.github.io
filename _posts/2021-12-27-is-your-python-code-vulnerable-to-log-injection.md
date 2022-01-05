@@ -196,7 +196,7 @@ that can check this for you.
 Also, once [PEP675](https://www.python.org/dev/peps/pep-0675) is implemented,
 you could perhaps use a typechecker to check only literal strings are passed to the logger.
 
-## Takeaways
+## Recommendations
 
 1. *Don't log untrusted text*. Python's logging library doesn't protect you from
    newlines or other unicode characters which allow
@@ -214,7 +214,7 @@ You can discuss this post on [reddit](https://www.reddit.com/r/Python/comments/r
 ### Update 2022-01-04
 
 I've since created [an issue on the Python bug tracker](https://bugs.python.org/issue46200) 
-to address potential security risks in the logging documentation,
+to document security risks in the logging docs,
 and perhaps even to create a more secure `logger` API.
 
 ### Thanks
