@@ -124,7 +124,7 @@ But it is plausible that either:
 - That log messages are passed through a user-defined function or logging filter
   which adds a `context` argument.
 
-In this case get an error like this:
+In this case we get an error like this:
 
 ```log
 --- Logging error ---
