@@ -194,7 +194,7 @@ Don't format log messages yourself with f-strings or otherwise [^2].
 Thankfully, there is a [flake8 plugin](https://github.com/globality-corp/flake8-logging-format)
 that can check this for you.
 Also, once [PEP675](https://www.python.org/dev/peps/pep-0675) is implemented,
-you can use a typechecker to check only literal strings are passed to the logger.
+you could perhaps use a typechecker to check only literal strings are passed to the logger.
 
 ## Takeaways
 
@@ -208,6 +208,8 @@ you can use a typechecker to check only literal strings are passed to the logger
 A full sample of the code used can be found
 [here](https://gist.github.com/ariebovenberg/dfd849ddc7a0dc7428a22b5b8a468134),
 so you can experiment for yourself.
+
+You can discuss this post on [reddit](https://www.reddit.com/r/Python/comments/rqaysb/is_your_python_code_vulnerable_to_log_injection/).
 
 ### Update 2022-01-04
 
