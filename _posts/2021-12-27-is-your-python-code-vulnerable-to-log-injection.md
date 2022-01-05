@@ -121,7 +121,8 @@ Of course, nobody is likely to mix formatting styles at first.
 But it is plausible that either:
 - Someone would add the `msg` parameter to an existing log statement in this way;
 - When refactoring to an f-string, someone forgot to remove the `context` argument;
-- That log messages are passed through a user-defined function which adds a `context` argument.
+- That log messages are passed through a user-defined function or logging filter
+  which adds a `context` argument.
 
 In this case get an error like this:
 
@@ -213,7 +214,7 @@ You can discuss this post on [reddit](https://www.reddit.com/r/Python/comments/r
 
 ### Update 2022-01-04
 
-I've since created [an issue on the Python bug tracker](https://bugs.python.org/issue46200) 
+I've since created [an issue on the Python bug tracker](https://bugs.python.org/issue46200)
 to document security risks in the logging docs,
 and perhaps even to create a more secure `logger` API.
 
