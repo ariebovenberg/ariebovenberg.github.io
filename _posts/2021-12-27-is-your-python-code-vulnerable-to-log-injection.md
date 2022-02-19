@@ -219,6 +219,15 @@ I've since created [an issue on the Python bug tracker](https://bugs.python.org/
 to document security risks in the logging docs,
 and perhaps even to create a more secure `logger` API.
 
+### Update 2022-02-19
+
+The log formatting DoS vulnerability has been
+[included in PEP675](https://www.python.org/dev/peps/pep-0675/#logging-format-string-injection)
+as a potential use of for the string literal type.
+I've opened a discussion on
+[discuss.python.org](https://discuss.python.org/t/safer-logging-methods-for-f-strings-and-new-style-formatting/13802)
+for improvements to the logging API.
+
 ### Thanks
 
 To [Daan Debie](https://daan.fyi) for reviewing this post!
