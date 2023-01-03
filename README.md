@@ -8,21 +8,25 @@ On MacOS:
 brew install rbenv  # follow additional installation instructions
 rbenv init
 curl -fsSL https://github.com/rbenv/rbenv-installer/raw/main/bin/rbenv-doctor | bash
-rbenv install 3.0.3
+rbenv install 3.1.3
 
 # restart the shell
 
 # in the repo
-rbenv local 3.0.3
+rbenv local 3.1.3
 
 gem install bundler jekyll
+
+bundle install
 ```
 
-### Updating
+### Useful commands
 
 ```bash
-bundle update github-pages
+bundle update
+bundle exec jekyll serve
 ```
+
 
 ## Resources used
 
