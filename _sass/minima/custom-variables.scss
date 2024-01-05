@@ -1,91 +1,12 @@
-// Placeholder to allow overriding predefined variables smoothly.
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,700;1,400;1,700&family=IBM+Plex+Sans:ital,wght@0,400;0,700;1,400;1,700&family=IBM+Plex+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-/* ibm-plex-serif-regular - latin */
-@font-face {
-  font-family: 'IBM Plex Serif';
-  font-style: normal;
-  font-weight: 400;
-  src: local(''),
-       url('../../static/fonts/ibm-plex-serif-v10-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../../static/fonts/ibm-plex-serif-v10-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
+$code-font-family: "IBM Plex Mono", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace;
+$base-font-family: "IBM Plex Sans", system-ui, sans-serif;
+$head-font-family: $code-font-family;
+// $head-font-family: "IBM Plex Serif", charter, Georgia, Cambria, "Times New Roman", Times, serif;
 
-/* ibm-plex-serif-700 - latin */
-@font-face {
-  font-family: 'IBM Plex Serif';
-  font-style: normal;
-  font-weight: 700;
-  src: local(''),
-       url('../../static/fonts/ibm-plex-serif-v10-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../../static/fonts/ibm-plex-serif-v10-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
-/* source-serif-pro-regular - latin */
-@font-face {
-  font-family: 'Source Serif Pro';
-  font-style: normal;
-  font-weight: 400;
-  src: local(''),
-       url('../../static/fonts/source-serif-pro-v11-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../../static/fonts/source-serif-pro-v11-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
-/* source-serif-pro-italic - latin */
-@font-face {
-  font-family: 'Source Serif Pro';
-  font-style: italic;
-  font-weight: 400;
-  src: local(''),
-       url('../../static/fonts/source-serif-pro-v11-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../../static/fonts/source-serif-pro-v11-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
-/* source-serif-pro-700 - latin */
-@font-face {
-  font-family: 'Source Serif Pro';
-  font-style: normal;
-  font-weight: 700;
-  src: local(''),
-       url('../../static/fonts/source-serif-pro-v11-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../../static/fonts/source-serif-pro-v11-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
-/* source-serif-pro-700italic - latin */
-@font-face {
-  font-family: 'Source Serif Pro';
-  font-style: italic;
-  font-weight: 700;
-  src: local(''),
-       url('../../static/fonts/source-serif-pro-v11-latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../../static/fonts/source-serif-pro-v11-latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
-/* inconsolata-regular - latin */
-@font-face {
-  font-family: 'Inconsolata';
-  font-style: normal;
-  font-weight: 400;
-  src: local(''),
-       url('../../static/fonts/inconsolata-v21-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../../static/fonts/inconsolata-v21-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
-/* inconsolata-700 - latin */
-@font-face {
-  font-family: 'Inconsolata';
-  font-style: normal;
-  font-weight: 700;
-  src: local(''),
-       url('../../static/fonts/inconsolata-v21-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../../static/fonts/inconsolata-v21-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
-
-
-$code-font-family: "Inconsolata", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace;
-$serif-font-family: "Source Serif Pro", charter, Georgia, Cambria, "Times New Roman", Times, serif;
-$slab-font-family: "IBM Plex Serif", charter, Georgia, Cambria, "Times New Roman", Times, serif;
-
-$base-font-size:   20px;
+$base-font-size:   16px;
 $small-font-size:  $base-font-size * 0.875;
 $base-line-height: 1.4;
+
+$content-width:  650px;

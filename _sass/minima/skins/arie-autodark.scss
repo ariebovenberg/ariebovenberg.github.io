@@ -3,8 +3,8 @@
 html {
     @import "minima/skins/arie-light";
     --brand-color:           #{$brand-color};
-    --brand-color-light:     #{$brand-color-light};
-    --brand-color-dark:      #{$brand-color-dark};
+    --brand-color-primary:   #{$brand-color-primary};
+    --brand-color-secondary: #{$brand-color-secondary};
 
     --site-title-color:      #{$site-title-color};
 
@@ -32,8 +32,8 @@ html {
   html {
     @import "minima/skins/arie-dark";
     --brand-color:           #{$brand-color};
-    --brand-color-light:     #{$brand-color-light};
-    --brand-color-dark:      #{$brand-color-dark};
+    --brand-color-primary:   #{$brand-color-primary};
+    --brand-color-secondary: #{$brand-color-secondary};
 
     --site-title-color:      #{$site-title-color};
 
@@ -60,8 +60,8 @@ html {
 
 
 $brand-color:           var(--brand-color);
-$brand-color-light:     var(--brand-color-light);
-$brand-color-dark:      var(--brand-color-dark);
+$brand-color-primary:   var(--brand-color-primary);
+$brand-color-secondary: var(--brand-color-secondary);
 
 $site-title-color:      var(--site-title-color);
 

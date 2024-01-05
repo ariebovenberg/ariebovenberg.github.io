@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Finding broken slots in popular Python libraries (and so can you!)"
+title:  "Finding broken slots in popular Python libraries"
 date:   2022-01-03
 ---
 
@@ -21,15 +21,15 @@ Here's how to use it:
 $ pip install slotscheck
 $ pip install pandas  # or whatever library you'd like to check
 $ slotscheck pandas
-ERROR: 'pandas.core.internals.array_manager.SingleArrayManager' has slots but inherits from non-slot class
-ERROR: 'pandas.core.internals.blocks.Block' has slots but inherits from non-slot class
-ERROR: 'pandas.core.internals.blocks.NumericBlock' has slots but inherits from non-slot class
-ERROR: 'pandas.core.internals.blocks.DatetimeLikeBlock' has slots but inherits from non-slot class
-ERROR: 'pandas.core.internals.blocks.ObjectBlock' has slots but inherits from non-slot class
-ERROR: 'pandas.core.internals.blocks.CategoricalBlock' has slots but inherits from non-slot class
-ERROR: 'pandas.core.internals.array_manager.BaseArrayManager' has slots but inherits from non-slot class
-ERROR: 'pandas.core.internals.managers.BaseBlockManager' has slots but inherits from non-slot class
-ERROR: 'pandas.core.internals.managers.SingleBlockManager' has slots but inherits from non-slot class
+ERROR: 'SingleArrayManager' has slots but inherits from non-slot class
+ERROR: 'Block' has slots but inherits from non-slot class
+ERROR: 'NumericBlock' has slots but inherits from non-slot class
+ERROR: 'DatetimeLikeBlock' has slots but inherits from non-slot class
+ERROR: 'ObjectBlock' has slots but inherits from non-slot class
+ERROR: 'CategoricalBlock' has slots but inherits from non-slot class
+ERROR: 'BaseArrayManager' has slots but inherits from non-slot class
+ERROR: 'BaseBlockManager' has slots but inherits from non-slot class
+ERROR: 'SingleBlockManager' has slots but inherits from non-slot class
 ```
 
 
@@ -43,23 +43,24 @@ all bases of a class also need to have it defined.
 Let's look at slots without inheritance:
 
 ```python
-from pympler.asizeof import asizeof  # checks complete size of objects in memory
+# checks complete size of objects in memory
+from pympler.asizeof import asizeof
 
 class EmptyNoSlots: pass
 
 class EmptyWithSlots: __slots__ = ()
 
 class NoSlots:
-    def __init__(self, a, b): self.a, self.b = a, b
+    def __init__(self): self.a, self.b = 1, 2
 
 class WithSlots:
     __slots__ = ("a", "b")
-    def __init__(self, a, b): self.a, self.b = a, b
+    def __init__(self): self.a, self.b = 1, 2
 
 print(asizeof(EmptyNoSlots()))    # 152
 print(asizeof(EmptyWithSlots()))  # 32
-print(asizeof(NoSlots(1, 2)))     # 328
-print(asizeof(WithSlots(1, 2)))   # 112 -- By Grabthar's hammer, what a savings!
+print(asizeof(NoSlots()))         # 328
+print(asizeof(WithSlots()))       # 112 !!!
 ```
 
 Looks like quite the difference!
@@ -69,18 +70,18 @@ So what about inheritance?
 
 class WithSlotsAndProperBaseClass(EmptyWithSlots):
     __slots__ = ("a", "b")
-    def __init__(self, a, b): self.a, self.b = a, b
+    def __init__(self): self.a, self.b = 1, 2
 
 class NoSlotsAtAll(EmptyNoSlots):
-    def __init__(self, a, b): self.a, self.b = a, b
+    def __init__(self): self.a, self.b = 1, 2
 
 class WithSlotsAndBadBaseClass(EmptyNoSlots):
     __slots__ = ("a", "b")
-    def __init__(self, a, b): self.a, self.b = a, b
+    def __init__(self): self.a, self.b = 1, 2
 
 print(asizeof(WithSlotsAndProperBaseClass(1, 2)))  # 112
 print(asizeof(NoSlotsAtAll(1, 2)))                 # 328
-print(asizeof(WithSlotsAndBadBaseClass(1, 2)))     # 232 -- oh no!
+print(asizeof(WithSlotsAndBadBaseClass(1, 2)))     # 232 !!!
 ```
 
 As you can see, bad `__slots__` inheritance can really bloat your memory footprint![^2]
