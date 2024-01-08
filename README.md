@@ -24,7 +24,8 @@ bundle install
 
 ```bash
 bundle update
-bundle exec jekyll serve
+bundle exec jekyll serve --incremental
+rm -rf _site  # clear generated site
 ```
 
 
