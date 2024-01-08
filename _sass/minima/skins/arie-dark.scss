@@ -19,9 +19,9 @@ $link-base-color:       $brand-color !default;
 $link-visited-color:    $brand-color-secondary !default;
 $link-hover-color:      lighten($link-base-color, 5%) !default;
 
-$border-color-01:       darken($brand-color, 30%) !default;
-$border-color-02:       darken($brand-color, 35%) !default;
-$border-color-03:       $brand-color-secondary !default;
+$border-color-01:       #928374 !default;
+$border-color-02:       #665c54 !default;
+$border-color-03:       #a89984 !default;
 
 $table-text-color:      darken($text-color, 18%) !default;
 $table-zebra-color:     darken($brand-color, 35%) !default;
