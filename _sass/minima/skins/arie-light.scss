@@ -15,6 +15,7 @@ $text-color:            #282828 !default;
 $text-color-light:      #928373 !default;
 $code-background-color: #f9f5d7 !default;
 $background-color:      lighten(desaturate($code-background-color, 20%), 5%) !default;
+$note-background-color: #fbf1c7 !default;
 
 $link-base-color:       $brand-color !default;
 $link-visited-color:    $brand-color-secondary !default;
@@ -22,14 +23,13 @@ $link-hover-color:      lighten($link-base-color, 15%) !default;
 
 $border-color-01:       #928374 !default;
 $border-color-02:       #7c6f64 !default;
-$border-color-03:       #a89984 !default;
+$border-color-03:       #d5c4a1 !default;
 
-$table-text-color:      lighten($text-color, 18%) !default;
-$table-zebra-color:     lighten($brand-color, 43%) !default;
-$table-header-bg-color: lighten($brand-color, 37%) !default;
-$table-header-border:   lighten($brand-color, 32%) !default;
-$table-border-color:    $border-color-01 !default;
-
+$table-text-color:      $text-color !default;
+$table-zebra-color:     $code-background-color !default;
+$table-header-bg-color: $code-background-color !default;
+$table-header-border:   $border-color-03 !default;
+$table-border-color:    $border-color-03 !default;
 
 // generated from pygmentize -S gruvbox-light -f html -a .highlight
 pre { line-height: 125%; }

@@ -46,3 +46,4 @@ exclude:
   - LICENSE
   - README.md
   - _code
+  - .git

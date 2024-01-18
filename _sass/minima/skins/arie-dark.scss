@@ -14,6 +14,7 @@ $text-color:            #f9f1e7 !default;
 $text-color-light:      #928374 !default;
 $code-background-color: #282828 !default;
 $background-color:      #32302f !default;
+$note-background-color: #1d2021 !default;
 
 $link-base-color:       $brand-color !default;
 $link-visited-color:    $brand-color-secondary !default;
@@ -23,11 +24,17 @@ $border-color-01:       #928374 !default;
 $border-color-02:       #665c54 !default;
 $border-color-03:       #a89984 !default;
 
-$table-text-color:      darken($text-color, 18%) !default;
-$table-zebra-color:     darken($brand-color, 35%) !default;
-$table-header-bg-color: darken($brand-color, 25%) !default;
-$table-header-border:   darken($brand-color, 30%) !default;
-$table-border-color:    $border-color-01 !default;
+// $table-text-color:      darken($text-color, 18%) !default;
+// $table-zebra-color:     darken($brand-color, 35%) !default;
+// $table-header-bg-color: darken($brand-color, 25%) !default;
+// $table-header-border:   darken($brand-color, 30%) !default;
+// $table-border-color:    $border-color-01 !default;
+
+$table-text-color:      $text-color !default;
+$table-zebra-color:     $code-background-color !default;
+$table-header-bg-color: $code-background-color !default;
+$table-header-border:   $border-color-02 !default;
+$table-border-color:    $border-color-02 !default;
 
 
 // gruvbox.dark colorscheme
