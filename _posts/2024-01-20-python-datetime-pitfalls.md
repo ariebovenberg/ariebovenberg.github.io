@@ -40,7 +40,7 @@ And the following I'm not:
 
 <div class="toc" markdown="1">
 
-## Contents
+### Contents
 
 **The pitfalls**
 
@@ -205,7 +205,7 @@ d_utc == d  # 🧨 but oddly: False!
 ## 7. Inconsistent equality within timezone
 
 In a mirror image of the previous pitfall, there is a false positive
-when comparing two datetimes within the exact same `tzinfo` object.
+when comparing two datetimes with the exact same `tzinfo` object.
 In that case, they are compared by their "wall time".
 This is mostly the same *except* when `fold` is involved...
 
@@ -219,8 +219,8 @@ earlier == later  # 🧨 oddly: true!
 ```
 
 Remember I said *exact same* `tzinfo` object? If you
-compare with the same timezone, but from `dateutil.tz`, you'll get
-a different result!
+compare with the same timezone, but you get it from `dateutil.tz`
+instead of `ZoneInfo`, you'll get a different result!
 
 ```python
 from dateutil import tz
@@ -245,7 +245,7 @@ to be a [design flaw](https://github.com/python/typeshed/issues/4802)
 in the standard library.
 
 ```python
-# 🧨 Breaks when you pass in a datetime, even though it's a subclass
+# 🧨 Breaks on a datetime, even though it's a subclass
 def is_future(dt: date) -> bool:
     return dt > date.today()
 
@@ -336,7 +336,7 @@ Since human error will always be the biggest source of bugs,
 a library's primary concern should be to minimize the chance of mistakes.
 Looking at other languages, it's clear that better designs are possible.
 Java, C#, and Rust all have distinct classes for naive and aware datetimes (and more).
-We can also see that redesigns are worth the high cost:
+We can also see that redesigns are worth the effort:
 Java [adopted Joda-Time](https://jcp.org/en/jsr/detail?id=310), 
 and JavaScript is [modernizing as well](https://tc39.es/proposal-temporal/docs/).
 Will Python's datetime be left behind?
