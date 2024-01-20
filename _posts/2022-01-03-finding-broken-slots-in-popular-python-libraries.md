@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Finding broken slots in popular Python libraries"
+title:  "Finding broken slots in popular Python libraries (and so can you!)"
 date:   2022-01-03
 ---
 
