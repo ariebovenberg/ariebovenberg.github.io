@@ -9,44 +9,20 @@ Not only are there probably more than you think;
 third-party libraries don't address most of them!
 I created a [new library](https://github.com/ariebovenberg/whenever) to explore what a better datetime library could look like.
 
-Two notes before we start:
-
-- Pitfalls aren't bugs. They're cases where `datetime` behaves in a way
-  that is surprising or confusing. It's always a bit
-  subjective whether something is a pitfall or not.
-- Many pitfalls exist simply because the authors couldn't
-  possibly anticipate all future needs.
-  Adding big features over 20 years—without breaking compatibility—isn't easy.
-
-With that out of the way, these are the third-party datetime
-libraries I'm looking at in this post:
-
-- [`arrow`](https://github.com/arrow-py/arrow) — Probably the most historically popular
-  datetime library. Its goal is to make datetime easier to use,
-  and to add features that many people feel are missing from the standard library.
-- [`pendulum`](https://github.com/sdispater/pendulum) — The only library that
-  rivals arrow in popularity. It has similar goals, while explicitly improving
-  on Arrow's handling of Daylight Saving Time (DST).
-- [`DateType`](https://github.com/glyph/DateType) — a library that allows
-  type-checkers to distinguish between naive and aware datetimes.
-  It doesn't change the runtime behavior of `datetime`.
-- [`heliclockter`](https://github.com/channable/heliclockter) — a young library
-  that offers datetime subclasses for UTC, local, and zoned datetimes.
-
-And the following I'm not:
-
-- `pytz` and `python-dateutil`, which aren't (full) datetime replacements
-- `delorean`, `maya`, and `moment` which all appear abandoned
-
 <div class="toc" markdown="1">
 
 ### Contents
+
+**Before we start**
+
+- [What's a pitfall?](#whats-a-pitfall)
+- [Libraries considered](#libraries-considered)
 
 **The pitfalls**
 
 1. [Incompatible concepts are squeezed into one class](#1-incompatible-concepts-are-squeezed-into-one-class)
 2. [Operations ignore Daylight Saving Time (DST)](#2-operations-ignore-daylight-saving-time-dst)
-3. [The meaning of "naive" is inconsistent](#3-the-meaning-of-naive-is-inconsistent)
+3. [The meaning of "naïve" is inconsistent](#3-the-meaning-of-naïve-is-inconsistent)
 4. [Non-existent datetimes pass silently](#4-non-existent-datetimes-pass-silently)
 5. [Guessing in the face of ambiguity](#5-guessing-in-the-face-of-ambiguity)
 6. [Disambiguation breaks equality](#6-disambiguation-breaks-equality)
@@ -63,9 +39,44 @@ And the following I'm not:
 
 </div>
 
+## What's a pitfall?
+
+Two notes before we start:
+
+- Pitfalls aren't bugs. They're cases where `datetime` behaves in a way
+  that is surprising or confusing. It's always a bit
+  subjective whether something is a pitfall or not.
+- Many pitfalls exist simply because the authors couldn't
+  possibly anticipate all future needs.
+  Adding big features over 20 years—without breaking compatibility—isn't easy.
+
+## Libraries considered
+
+With that out of the way, these are the third-party datetime
+libraries I'm looking at in this post:
+
+- [`arrow`](https://github.com/arrow-py/arrow) — Probably the most historically popular
+  datetime library. Its goal is to make datetime easier to use,
+  and to add features that many people feel are missing from the standard library.
+- [`pendulum`](https://github.com/sdispater/pendulum) — The only library that
+  rivals arrow in popularity. It has similar goals, while explicitly improving
+  on Arrow's handling of Daylight Saving Time (DST).
+- [`DateType`](https://github.com/glyph/DateType) — a library that allows
+  type-checkers to distinguish between naïve and aware datetimes.
+  It doesn't change the runtime behavior of `datetime`.
+- [`heliclockter`](https://github.com/channable/heliclockter) — a young library
+  that offers datetime subclasses for UTC, local, and zoned datetimes.
+
+These libraries I'm *not* looking at:
+
+- `pytz` and `python-dateutil`, which aren't (full) datetime replacements
+- `delorean`, `maya`, and `moment` which all appear abandoned
+
+Now: on to the pitfalls!
+
 ## 1. Incompatible concepts are squeezed into one class
 
-It's an infamous pain point that a `datetime` instance can be either naive or aware,
+It's an infamous pain point that a `datetime` instance can be either naïve or aware,
 and that they can't be mixed.
 In any complex codebase, it's difficult to be sure you won't accidentally mix them
 without actually running the code.
@@ -73,15 +84,20 @@ As a result, you end up writing redundant runtime checks,
 or hoping all developers diligently read the docstrings.
 
 ```python
-# 🧨 naive or aware? No way to tell...
+# 🧨 naïve or aware? No way to tell...
 def plan_mission(launch_utc: datetime) -> None: ...
 ```
+
+There's also the question whether distinguishing aware and naïve is enough,
+since within the "aware" category there are actually several different kinds of datetimes.
+The behavior of UTC, fixed offset, or IANA timezone datetimes is very different
+when it comes to ambiguity, for example.
 
 #### What's being done about it?
 
 - ✅ `heliclockter` has separate classes for local, zoned, and UTC datetimes.
-- ✅ `DateType` allows type-checkers to distinguish naive or aware datetimes
-- ❌ `arrow` and `pendulum` still have one class for naive and aware.
+- ✅ `DateType` allows type-checkers to distinguish naïve or aware datetimes
+- ❌ `arrow` and `pendulum` still have one class for naïve and aware.
 
 ## 2. Operations ignore Daylight Saving Time (DST)
 
@@ -104,16 +120,16 @@ sleep = wake_up - bedtime
 - ✅ `pendulum` explicitly fixes this issue
 - ❌ `heliclockter`, `arrow`, and `DateType` don't address it
 
-## 3. The meaning of "naive" is inconsistent
+## 3. The meaning of "naïve" is inconsistent
 
-In various parts of the standard library, "naive" datetimes are interpreted
-differently. Ostensibly, "naive" means "detached from the real world",
+In various parts of the standard library, "naïve" datetimes are interpreted
+differently. Ostensibly, "naïve" means "detached from the real world",
 but in the datetime library it is often implicitly treated as local time.
 Confusingly, it is sometimes treated as UTC[^1], while in other places it is
 treated as neither!
 
 ```python
-# a naive datetime
+# a naïve datetime
 d = datetime(2024, 1, 1)
 
 # ⚠️ here: treated as a local time
@@ -131,7 +147,7 @@ d >= datetime.now(UTC)
 
 #### What's being done about it?
 
-- ❌ While `pendulum` and `arrow` do discourage using naive datetimes,
+- ❌ While `pendulum` and `arrow` do discourage using naïve datetimes,
   they still support the same inconsistent semantics.
 - ❌ `DateType` and `heliclockter` don't address this
 
@@ -200,7 +216,7 @@ d_utc == d  # 🧨 but oddly: False!
 
 #### What's being done about it?
 
-- ❌ None of the libraries have addressed this issue
+- ❌ None of the libraries addresses this issue
 
 ## 7. Inconsistent equality within timezone
 
@@ -230,7 +246,7 @@ earlier == later2  # now false
 
 #### What's being done about it?
 
-- ❌ No library has addressed this issue
+- ❌ None of the libraries addresses this issue
 
 ## 8. Datetime inherits from date
 
@@ -246,11 +262,11 @@ in the standard library.
 
 ```python
 # 🧨 Breaks on a datetime, even though it's a subclass
-def is_future(dt: date) -> bool:
-    return dt > date.today()
+def is_future(d: date) -> bool:
+    return d > date.today()
 
 # 🧨 Some methods inherited from `date` don't make sense
-datetime.today()
+datetime.today()  # fun exercise: what does this return?
 ```
 
 #### What's being done about it?
@@ -302,7 +318,8 @@ datetime(2023, 7, 1, tzinfo=my_tz)  # 🧨 not valid for summer!
 #### What's being done about it?
 
 - ✅ `pendulum` and `arrow` have methods to convert to the full local timezone.
-- ❌ `heliclockter` has a local datetime type with the same issue
+- ❌ `heliclockter` has a local datetime type with the same issue,
+  although a fix is in the works.
 - ❌ `DateType` doesn't address this issue
 
 
@@ -312,9 +329,9 @@ Below is a summary of how the libraries address the pitfalls (✅) or not (❌).
 
 | Pitfall                     | Arrow | Pendulum | DateType | Heliclockter |
 |-----------------------------|-------|----------|----------|--------------|
-| aware/naive mixed class     | ❌     | ❌        | ✅        | ✅            |
+| aware/naïve mixed class     | ❌     | ❌        | ✅        | ✅            |
 | Operators ignore DST        | ❌     | ✅        | ❌        | ❌            |
-| Unclear "naive" semantics   | ❌     | ❌        | ❌        | ❌            |
+| Unclear "naïve" semantics   | ❌     | ❌        | ❌        | ❌            |
 | Silent non-existence        | ❌     | ❌        | ❌        | ❌            |
 | Guesses on ambiguity        | ❌     | ❌        | ❌        | ❌            |
 | Disambiguation breaks equality | ❌     | ❌        | ❌        | ❌            |
@@ -325,19 +342,20 @@ Below is a summary of how the libraries address the pitfalls (✅) or not (❌).
 
 ## Why should you care?
 
-The pitfalls roughly fall in two categories: *confusing design* and *surprising edge cases*.
+The pitfalls roughly fall into two categories:
+*confusing design* and *surprising edge cases*.
 Here is why you should care about both.
 
 ### Confusing design
 
 Confusing design is the larger problem,
-because it makes the library harder to use correctly.
-Since human error will always be the biggest source of bugs,
-a library's primary concern should be to minimize the chance of mistakes.
+because it amplifies the biggest source of bugs: human error.
+While good design helps minimize the chance of mistakes,
+bad design introduces more opportunities for them.
 Looking at other languages, it's clear that better designs are possible.
-Java, C#, and Rust all have distinct classes for naive and aware datetimes (and more).
-We can also see that redesigns are worth the effort:
-Java [adopted Joda-Time](https://jcp.org/en/jsr/detail?id=310), 
+Java, C#, and Rust all have distinct classes for naïve and aware datetimes (and more).
+We can also see that redesigns are worth the substantial effort:
+Java [adopted Joda-Time](https://jcp.org/en/jsr/detail?id=310),
 and JavaScript is [modernizing as well](https://tc39.es/proposal-temporal/docs/).
 Will Python's datetime be left behind?
 
@@ -374,26 +392,26 @@ Here is how it addresses the pitfalls:
        OffsetDateTime,
        # Full-featured IANA timezones
        ZonedDateTime,
-       # In the local system timezone
+       # The local system timezone
        LocalDateTime,
-       # Detached from any timezone info
+       # Detached from any timezones
        NaiveDateTime,
    )
    ```
 2. Addition and subtraction take DST into account.
-3. Naive is always naive. UTC and local time have their own separate classes.
+3. Naïve is always naïve. UTC and local time have their own separate classes.
 4. Creating non-existent datetimes raises an exception.
 5. Ambiguous datetimes must be explicitly disambiguated.
 
    ```python
    ZonedDateTime(
-       2023, 1, 1, tz="Europe/Paris", 
+       2023, 1, 1, tz="Europe/Paris",
    )  # ok: not ambiguous
    ZonedDateTime(
-       2023, 10, 29, 2, tz="Europe/Paris", 
+       2023, 10, 29, 2, tz="Europe/Paris",
    )  # ERROR: ambiguous!
    ZonedDateTime(
-       2023, 10, 29, 2, tz="Europe/Paris", 
+       2023, 10, 29, 2, tz="Europe/Paris",
        disambiguate="later"
    )  # that's better!
    ```
@@ -401,9 +419,11 @@ Here is how it addresses the pitfalls:
 7. Aware datetimes are equal if they occur at the same moment.
 
    ```python
-   a == b  # always equivalent to a.as_utc() == b.as_utc()
+   a == b
+   # always equivalent to:
+   a.as_utc() == b.as_utc()
    ```
-8. The datetime classes doesn't inherit from date.
+8. The datetime classes don't inherit from date.
 9. IANA timezones are used everywhere, no separate timezone class needed.
 10. Local datetimes handle DST transitions correctly.
 
