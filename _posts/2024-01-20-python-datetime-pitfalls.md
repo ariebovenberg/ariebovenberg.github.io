@@ -21,7 +21,7 @@ I created a [new library](https://github.com/ariebovenberg/whenever) to explore 
 **The pitfalls**
 
 1. [Incompatible concepts are squeezed into one class](#1-incompatible-concepts-are-squeezed-into-one-class)
-2. [Operations ignore Daylight Saving Time (DST)](#2-operations-ignore-daylight-saving-time-dst)
+2. [Operators ignore Daylight Saving Time (DST)](#2-operators-ignore-daylight-saving-time-dst)
 3. [The meaning of "naïve" is inconsistent](#3-the-meaning-of-naïve-is-inconsistent)
 4. [Non-existent datetimes pass silently](#4-non-existent-datetimes-pass-silently)
 5. [Guessing in the face of ambiguity](#5-guessing-in-the-face-of-ambiguity)
@@ -99,9 +99,9 @@ when it comes to ambiguity, for example.
 - ✅ `DateType` allows type-checkers to distinguish naïve or aware datetimes
 - ❌ `arrow` and `pendulum` still have one class for naïve and aware.
 
-## 2. Operations ignore Daylight Saving Time (DST)
+## 2. Operators ignore Daylight Saving Time (DST)
 
-Given that `datetime` supports timezones,
+Given that `datetime` supports DST-aware IANA timezones,
 you'd reasonably expect that the `+/-` operators would take
 them into account—but they don't!
 
@@ -111,7 +111,8 @@ paris = ZoneInfo("Europe/Paris")
 bedtime = datetime(2023, 3, 25, 22, tzinfo=paris)
 wake_up = datetime(2023, 3, 26, 7, tzinfo=paris)
 
-# it says 9 hours, but it's actually 8!
+# It says 9 hours, but it's actually 8!
+# (because we skipped directly from 2am to 3am due to DST)
 sleep = wake_up - bedtime
 ```
 
@@ -416,7 +417,7 @@ Here is how it addresses the pitfalls:
    )  # that's better!
    ```
 6. Disambiguated datetimes work correctly in comparisons.
-7. Aware datetimes are equal if they occur at the same moment.
+7. Aware datetimes are equal if they occur at the same moment. No exceptions.
 
    ```python
    a == b
@@ -429,6 +430,9 @@ Here is how it addresses the pitfalls:
 
 Feedback is welcome! ⭐️
 
+## Update 2024-02-01T18:14:00+01:00
+
+Clarified wording and code comments in pitfall #3.
 
 [^1]: In the standard library, methods like `utcnow()` are slowly being deprecated,
       but many UTC-assuming parts remain.
