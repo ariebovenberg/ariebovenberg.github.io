@@ -9,6 +9,8 @@ Not only are there probably more than you think;
 third-party libraries don't address most of them!
 I created a [new library](https://github.com/ariebovenberg/whenever) to explore what a better datetime library could look like.
 
+💬 [Discuss this post on Reddit](https://www.reddit.com/r/Python/comments/1ag6uxc/ten_python_datetime_pitfalls_and_what_libraries/)
+
 <div class="toc" markdown="1">
 
 ### Contents
@@ -28,7 +30,7 @@ I created a [new library](https://github.com/ariebovenberg/whenever) to explore 
 6. [Disambiguation breaks equality](#6-disambiguation-breaks-equality)
 7. [Inconsistent equality within timezone](#7-inconsistent-equality-within-timezone)
 8. [Datetime inherits from date](#8-datetime-inherits-from-date)
-9. [`datetime.timezone` isn't a timezone](#9-datetimetimezone-isnt-a-timezone)
+9. [`datetime.timezone` isn't enough for timezone support](#9-datetimetimezone-isnt-enough-for-timezone-support)
 10. [The local timezone is DST-unaware](#10-the-local-timezone-is-dst-unaware)
 
 **Takeaways**
@@ -101,7 +103,7 @@ when it comes to ambiguity, for example.
 
 ## 2. Operators ignore Daylight Saving Time (DST)
 
-Given that `datetime` supports DST-aware IANA timezones,
+Given that `datetime` supports timezones with DST transitions,
 you'd reasonably expect that the `+/-` operators would take
 them into account—but they don't!
 
@@ -155,8 +157,7 @@ d >= datetime.now(UTC)
 ## 4. Non-existent datetimes pass silently
 
 When the clock in a timezone is set forward, a "gap" is created. For example,
-if the clock moves forward from 2am to 3am, the time 2:30am doesn't exist
-in the timezone.
+if DST moves the clock forward from 2am to 3am, the time 2:30am is skipped.
 The standard library doesn't warn you when you create such a non-existent time.
 As soon as you operate on these objects, you run into problems.
 
@@ -178,7 +179,7 @@ datetime.fromtimestamp(t) == d  # False 🤷
 ## 5. Guessing in the face of ambiguity
 
 When the clock in a timezone is set backwards, an ambiguity is created.
-For example, if the clock is set one hour back at 3am, the time 2:30am exists
+For example, if DST sets the clock one hour back at 3am, the time 2:30am exists
 twice: before and *after* the change.
 The ``fold`` attribute [was introduced](https://peps.python.org/pep-0495/)
 to resolve these ambiguities
@@ -236,7 +237,7 @@ earlier == later  # 🧨 oddly: true!
 ```
 
 Remember I said *exact same* `tzinfo` object? If you
-compare with the same timezone, but you get it from `dateutil.tz`
+compare with the same timezone, but you get its object from `dateutil.tz`
 instead of `ZoneInfo`, you'll get a different result!
 
 ```python
@@ -277,11 +278,11 @@ datetime.today()  # fun exercise: what does this return?
 - ❌ `arrow`, `pendulum`, and `heliclockter` don't address the issue.
   Their datetime classes all inherit from `datetime` (and thus also `date`).
 
-## 9. `datetime.timezone` isn't a timezone
+## 9. `datetime.timezone` isn't enough for timezone support
 
 OK—so this is maybe something you learn once and then never forget.
 But it's still confusing that `datetime.timezone` is only for fixed offsets,
-and you need `ZoneInfo` to express full timezones with DST transitions.
+and you need `ZoneInfo` to express real-world timezone behavior with DST transitions.
 For beginners that don't know the difference, this is an unfortunate trap.
 
 ```python
@@ -289,10 +290,10 @@ from datetime import timezone, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 # 🧨 Wrong: it's a fixed offset only valid in winter!
-paris_timezone = timezone(timedelta(hours=1), "CET")
+paris_tz = timezone(timedelta(hours=1), "CET")
 
 # ✅ This is what you want
-paris_timezone = ZoneInfo("Europe/Paris")
+paris_tz = ZoneInfo("Europe/Paris")
 ```
 
 - ✅ Both `arrow` and `pendulum` side-step this issue by specifying
@@ -330,7 +331,7 @@ Below is a summary of how the libraries address the pitfalls (✅) or not (❌).
 
 | Pitfall                     | Arrow | Pendulum | DateType | Heliclockter |
 |-----------------------------|-------|----------|----------|--------------|
-| aware/naïve mixed class     | ❌     | ❌        | ✅        | ✅            |
+| aware/naïve in one class    | ❌     | ❌        | ✅        | ✅            |
 | Operators ignore DST        | ❌     | ✅        | ❌        | ❌            |
 | Unclear "naïve" semantics   | ❌     | ❌        | ❌        | ❌            |
 | Silent non-existence        | ❌     | ❌        | ❌        | ❌            |
@@ -338,7 +339,7 @@ Below is a summary of how the libraries address the pitfalls (✅) or not (❌).
 | Disambiguation breaks equality | ❌     | ❌        | ❌        | ❌            |
 | Inconsistent equality within zone | ❌     | ❌        | ❌        | ❌            |
 | datetime inherits from date | ❌     | ❌        | ✅        | ❌            |
-| `timezone` isn't a timezone | ✅     | ✅        | ❌        | ❌            |
+| `timezone` isn't enough for timezone support | ✅     | ✅        | ❌        | ❌            |
 | DST-unaware local timezone  | ✅     | ✅        | ❌        | ❌            |
 
 ## Why should you care?
@@ -425,14 +426,26 @@ Here is how it addresses the pitfalls:
    a.as_utc() == b.as_utc()
    ```
 8. The datetime classes don't inherit from date.
-9. IANA timezones are used everywhere, no separate timezone class needed.
+9. IANA timezones are used everywhere, no separate classes are needed.
 10. Local datetimes handle DST transitions correctly.
 
 Feedback is welcome! ⭐️
 
-## Update 2024-02-01T18:14:00+01:00
+## Changelog
 
-Clarified wording and code comments in pitfall #3.
+See the [git history](https://github.com/ariebovenberg/ariebovenberg.github.io/commits/main/_posts/2024-01-20-python-datetime-pitfalls.md)
+for exact changes to this article since initial publication.
+
+### 2024-02-01 18:14:00+01:00
+
+- Clarified wording and code comments in pitfall #3.
+
+### 2024-02-02 10:13:00+01:00
+
+- Clarified wording around timezones and IANA tz database in pitfall #9,
+  and throughout the article.
+- Added reddit link
+
 
 [^1]: In the standard library, methods like `utcnow()` are slowly being deprecated,
       but many UTC-assuming parts remain.
