@@ -90,10 +90,12 @@ or hoping all developers diligently read the docstrings.
 def plan_mission(launch_utc: datetime) -> None: ...
 ```
 
-There's also the question whether distinguishing aware and naïve is enough,
-since within the "aware" category there are actually several different kinds of datetimes.
-The behavior of UTC, fixed offset, or IANA timezone datetimes is very different
-when it comes to ambiguity, for example.
+There’s also the question whether distinguishing aware and naïve is enough,
+since within the "aware" category there are actually several different kinds
+of datetimes.
+While compatible,
+the semantics of UTC/offset and IANA timezones are notably different when
+it comes to ambiguity, for example.
 
 #### What's being done about it?
 
@@ -188,7 +190,7 @@ The problem is that there is no objective default value for ``fold``:
 whether you want the "earlier" or "later"
 option will depend on the particular context.
 For backwards compatibility, the standard library defaults to ``0``,
-which has the effect of silently assuming that you want the earlier occurrence.
+which has the effect of silently assuming that you want the earlier occurrence[^3].
 
 ```python
 # 🧨 Guesses your intent without warning
@@ -446,9 +448,18 @@ for exact changes to this article since initial publication.
   and throughout the article.
 - Added reddit link
 
+### 2024-02-13 08:40:00+01:00
+
+- Clarified wording on distinguishing "aware" types in pitfall #1.
+- Added note about RFC 5545 in pitfall #5.
+
 
 [^1]: In the standard library, methods like `utcnow()` are slowly being deprecated,
       but many UTC-assuming parts remain.
 
 [^2]: Interestingly, pendulum used to have an explicit `dst_rule` parameter that
       was silently [removed in 3.0](https://github.com/sdispater/pendulum/issues/789)
+
+[^3]: This does coincide with RFC 5545, but this is probably
+      coincidental. PEP495 doesn't mention RFC 5545, and its semantics
+      aren't followed in other areas of the standard library.
