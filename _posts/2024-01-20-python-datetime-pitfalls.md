@@ -9,7 +9,8 @@ Not only are there probably more than you think;
 third-party libraries don't address most of them!
 I created a [new library](https://github.com/ariebovenberg/whenever) to explore what a better datetime library could look like.
 
-💬 [Discuss this post on Reddit](https://www.reddit.com/r/Python/comments/1ag6uxc/ten_python_datetime_pitfalls_and_what_libraries/)
+💬 Discuss this post [on Reddit](https://www.reddit.com/r/Python/comments/1ag6uxc/ten_python_datetime_pitfalls_and_what_libraries/)
+or [Hacker News](https://news.ycombinator.com/item?id=39417231).
 
 <div class="toc" markdown="1">
 
@@ -167,9 +168,9 @@ As soon as you operate on these objects, you run into problems.
 # ⚠️ This time doesn't exist on this date
 d = datetime(2023, 3, 26, 2, 30, tzinfo=paris)
 
-# 🧨 No timestamp exists, so it just makes one up
+# 🧨 No timestamp exists, so it takes another one from the future
 t = d.timestamp()
-datetime.fromtimestamp(t) == d  # False 🤷
+datetime.fromtimestamp(t, tz=paris) == d  # False 🤷
 ```
 
 #### What's being done about it?
@@ -329,20 +330,20 @@ datetime(2023, 7, 1, tzinfo=my_tz)  # 🧨 not valid for summer!
 
 ## Datetime library scorecard
 
-Below is a summary of how the libraries address the pitfalls (✅) or not (❌).
+Below is a summary of how the libraries address the pitfalls or not.
 
 | Pitfall                     | Arrow | Pendulum | DateType | Heliclockter |
 |-----------------------------|-------|----------|----------|--------------|
-| aware/naïve in one class    | ❌     | ❌        | ✅        | ✅            |
-| Operators ignore DST        | ❌     | ✅        | ❌        | ❌            |
-| Unclear "naïve" semantics   | ❌     | ❌        | ❌        | ❌            |
-| Silent non-existence        | ❌     | ❌        | ❌        | ❌            |
-| Guesses on ambiguity        | ❌     | ❌        | ❌        | ❌            |
-| Disambiguation breaks equality | ❌     | ❌        | ❌        | ❌            |
-| Inconsistent equality within zone | ❌     | ❌        | ❌        | ❌            |
-| datetime inherits from date | ❌     | ❌        | ✅        | ❌            |
-| `timezone` isn't enough for timezone support | ✅     | ✅        | ❌        | ❌            |
-| DST-unaware local timezone  | ✅     | ✅        | ❌        | ❌            |
+| aware/naïve in one class    | ❌ no     | ❌ no        | ✅ yes        | ✅ yes            |
+| Operators ignore DST        | ❌ no     | ✅ yes        | ❌ no        | ❌ no            |
+| Unclear "naïve" semantics   | ❌ no     | ❌ no        | ❌ no        | ❌ no            |
+| Silent non-existence        | ❌ no     | ❌ no        | ❌ no        | ❌ no            |
+| Guesses on ambiguity        | ❌ no     | ❌ no        | ❌ no        | ❌ no            |
+| Disambiguation breaks equality | ❌ no     | ❌ no        | ❌ no        | ❌ no            |
+| Inconsistent equality within zone | ❌ no     | ❌ no        | ❌ no        | ❌ no            |
+| datetime inherits from date | ❌ no     | ❌ no        | ✅ yes        | ❌ no            |
+| `timezone` isn't enough for timezone support | ✅ yes     | ✅ yes        | ❌ no        | ❌ no            |
+| DST-unaware local timezone  | ✅ yes     | ✅ yes        | ❌ no        | ❌ no            |
 
 ## Why should you care?
 
@@ -453,6 +454,11 @@ for exact changes to this article since initial publication.
 - Clarified wording on distinguishing "aware" types in pitfall #1.
 - Added note about RFC 5545 in pitfall #5.
 
+### 2024-02-18 20:28:00+01:00
+
+- Added Hacker News link
+- Clarification in pitfall #4, fix code example
+- Added non-emoji text to scorecard for systems that don't support it
 
 [^1]: In the standard library, methods like `utcnow()` are slowly being deprecated,
       but many UTC-assuming parts remain.
