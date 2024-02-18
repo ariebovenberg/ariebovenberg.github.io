@@ -87,7 +87,7 @@ As a result, you end up writing redundant runtime checks,
 or hoping all developers diligently read the docstrings.
 
 ```python
-# 🧨 naïve or aware? No way to tell...
+# Naïve or aware? No way to tell...
 def plan_mission(launch_utc: datetime) -> None: ...
 ```
 
@@ -100,9 +100,9 @@ it comes to ambiguity, for example.
 
 #### What's being done about it?
 
-- ✅ `heliclockter` has separate classes for local, zoned, and UTC datetimes.
-- ✅ `DateType` allows type-checkers to distinguish naïve or aware datetimes
-- ❌ `arrow` and `pendulum` still have one class for naïve and aware.
+- :heavy_check_mark: `heliclockter` has separate classes for local, zoned, and UTC datetimes.
+- :heavy_check_mark: `DateType` allows type-checkers to distinguish naïve or aware datetimes
+- :x: `arrow` and `pendulum` still have one class for naïve and aware.
 
 ## 2. Operators ignore Daylight Saving Time (DST)
 
@@ -123,8 +123,8 @@ sleep = wake_up - bedtime
 
 #### What's being done about it?
 
-- ✅ `pendulum` explicitly fixes this issue
-- ❌ `heliclockter`, `arrow`, and `DateType` don't address it
+- :heavy_check_mark: `pendulum` explicitly fixes this issue
+- :x: `heliclockter`, `arrow`, and `DateType` don't address it
 
 ## 3. The meaning of "naïve" is inconsistent
 
@@ -138,24 +138,24 @@ treated as neither!
 # a naïve datetime
 d = datetime(2024, 1, 1)
 
-# ⚠️ here: treated as a local time
+# here: treated as a local time
 d.timestamp()
 d.astimezone(UTC)
 
-# 🧨 here: assumed UTC
+# here: assumed UTC
 d.utctimetuple()
 email.utils.format_datetime(d)
 datetime.utcnow()
 
-# 🤷 here: neither! (error)
+# here: neither! (error)
 d >= datetime.now(UTC)
 ```
 
 #### What's being done about it?
 
-- ❌ While `pendulum` and `arrow` do discourage using naïve datetimes,
+- :x: While `pendulum` and `arrow` do discourage using naïve datetimes,
   they still support the same inconsistent semantics.
-- ❌ `DateType` and `heliclockter` don't address this
+- :x: `DateType` and `heliclockter` don't address this
 
 ## 4. Non-existent datetimes pass silently
 
@@ -165,19 +165,19 @@ The standard library doesn't warn you when you create such a non-existent time.
 As soon as you operate on these objects, you run into problems.
 
 ```python
-# ⚠️ This time doesn't exist on this date
+# This time doesn't exist on this date
 d = datetime(2023, 3, 26, 2, 30, tzinfo=paris)
 
-# 🧨 No timestamp exists, so it takes another one from the future
+# No timestamp exists, so it takes another one from the future
 t = d.timestamp()
-datetime.fromtimestamp(t, tz=paris) == d  # False 🤷
+datetime.fromtimestamp(t, tz=paris) == d  # False!?
 ```
 
 #### What's being done about it?
 
-- ❌ `pendulum` replaces the current silent behavior with another: it
+- :x: `pendulum` replaces the current silent behavior with another: it
   fast-forwards to a valid time [without warning](https://github.com/sdispater/pendulum/issues/697).
-- ❌ `arrow`, `DateType` and `heliclockter` don't address this issue
+- :x: `arrow`, `DateType` and `heliclockter` don't address this issue
 
 ## 5. Guessing in the face of ambiguity
 
@@ -194,15 +194,15 @@ For backwards compatibility, the standard library defaults to ``0``,
 which has the effect of silently assuming that you want the earlier occurrence[^3].
 
 ```python
-# 🧨 Guesses your intent without warning
+# Guesses your intent without warning
 d = datetime(2023, 10, 29, 2, 30, tzinfo=paris)
 ```
 
 #### What's being done about it?
 
-- ❌ `pendulum` also guesses, but rather arbitrarily decides that ``1``
+- :x: `pendulum` also guesses, but rather arbitrarily decides that ``1``
   is the better default[^2].
-- ❌ `arrow`, `DateType` and `heliclockter` don't address the issue.
+- :x: `arrow`, `DateType` and `heliclockter` don't address the issue.
 
 ## 6. Disambiguation breaks equality
 
@@ -216,12 +216,12 @@ d = datetime(2023, 10, 29, 2, 30, tzinfo=paris, fold=1)
 
 d_utc = d.astimezone(UTC)
 d_utc.timestamp() == d.timestamp()  # True: same moment in time
-d_utc == d  # 🧨 but oddly: False!
+d_utc == d  # False!?
 ```
 
 #### What's being done about it?
 
-- ❌ None of the libraries addresses this issue
+- :x: None of the libraries addresses this issue
 
 ## 7. Inconsistent equality within timezone
 
@@ -236,7 +236,7 @@ earlier = datetime(2023, 10, 29, 2, 30, tzinfo=paris, fold=0)
 later = datetime(2023, 10, 29, 2, 30, tzinfo=paris, fold=1)
 
 earlier.timestamp() == later.timestamp()  # false, as expected
-earlier == later  # 🧨 oddly: true!
+earlier == later  # true!?
 ```
 
 Remember I said *exact same* `tzinfo` object? If you
@@ -251,7 +251,7 @@ earlier == later2  # now false
 
 #### What's being done about it?
 
-- ❌ None of the libraries addresses this issue
+- :x: None of the libraries addresses this issue
 
 ## 8. Datetime inherits from date
 
@@ -266,19 +266,19 @@ to be a [design flaw](https://github.com/python/typeshed/issues/4802)
 in the standard library.
 
 ```python
-# 🧨 Breaks on a datetime, even though it's a subclass
+# Breaks on a datetime, even though it's a subclass
 def is_future(d: date) -> bool:
     return d > date.today()
 
-# 🧨 Some methods inherited from `date` don't make sense
+# Some methods inherited from `date` don't make sense
 datetime.today()  # fun exercise: what does this return?
 ```
 
 #### What's being done about it?
 
-- ✅ `DateType` was explicitly developed to fix this inheritance relationship
+- :heavy_check_mark: `DateType` was explicitly developed to fix this inheritance relationship
   at type-checking time.
-- ❌ `arrow`, `pendulum`, and `heliclockter` don't address the issue.
+- :x: `arrow`, `pendulum`, and `heliclockter` don't address the issue.
   Their datetime classes all inherit from `datetime` (and thus also `date`).
 
 ## 9. `datetime.timezone` isn't enough for timezone support
@@ -292,16 +292,16 @@ For beginners that don't know the difference, this is an unfortunate trap.
 from datetime import timezone, datetime, timedelta
 from zoneinfo import ZoneInfo
 
-# 🧨 Wrong: it's a fixed offset only valid in winter!
+# Wrong: it's a fixed offset only valid in winter!
 paris_tz = timezone(timedelta(hours=1), "CET")
 
-# ✅ This is what you want
+# Correct: accounts for all timezone changes
 paris_tz = ZoneInfo("Europe/Paris")
 ```
 
-- ✅ Both `arrow` and `pendulum` side-step this issue by specifying
+- :heavy_check_mark: Both `arrow` and `pendulum` side-step this issue by specifying
   timezones as strings instead of requiring special class instance.
-- ❌ `heliclockter` and `DateType` don't address this issue
+- :x: `heliclockter` and `DateType` don't address this issue
 
 ## 10. The local timezone is DST-unaware
 
@@ -317,33 +317,33 @@ of the full `Europe/Paris` timezone.
 my_tz = datetime(2023, 1, 1).astimezone().tzinfo
 # but you actually only have the wintertime variant
 print(my_tz)  # timezone(offset=timedelta(hours=1), "CET")
-datetime(2023, 7, 1, tzinfo=my_tz)  # 🧨 not valid for summer!
+datetime(2023, 7, 1, tzinfo=my_tz)  # not valid for summer!
 ```
 
 #### What's being done about it?
 
-- ✅ `pendulum` and `arrow` have methods to convert to the full local timezone.
-- ❌ `heliclockter` has a local datetime type with the same issue,
+- :heavy_check_mark: `pendulum` and `arrow` have methods to convert to the full local timezone.
+- :x: `heliclockter` has a local datetime type with the same issue,
   although a fix is in the works.
-- ❌ `DateType` doesn't address this issue
+- :x: `DateType` doesn't address this issue
 
 
 ## Datetime library scorecard
 
-Below is a summary of how the libraries address the pitfalls or not.
+Below is a summary of how the libraries address the pitfalls (:heavy_check_mark:) or not (:x:).
 
 | Pitfall                     | Arrow | Pendulum | DateType | Heliclockter |
 |-----------------------------|-------|----------|----------|--------------|
-| aware/naïve in one class    | ❌ no     | ❌ no        | ✅ yes        | ✅ yes            |
-| Operators ignore DST        | ❌ no     | ✅ yes        | ❌ no        | ❌ no            |
-| Unclear "naïve" semantics   | ❌ no     | ❌ no        | ❌ no        | ❌ no            |
-| Silent non-existence        | ❌ no     | ❌ no        | ❌ no        | ❌ no            |
-| Guesses on ambiguity        | ❌ no     | ❌ no        | ❌ no        | ❌ no            |
-| Disambiguation breaks equality | ❌ no     | ❌ no        | ❌ no        | ❌ no            |
-| Inconsistent equality within zone | ❌ no     | ❌ no        | ❌ no        | ❌ no            |
-| datetime inherits from date | ❌ no     | ❌ no        | ✅ yes        | ❌ no            |
-| `timezone` isn't enough for timezone support | ✅ yes     | ✅ yes        | ❌ no        | ❌ no            |
-| DST-unaware local timezone  | ✅ yes     | ✅ yes        | ❌ no        | ❌ no            |
+| aware/naïve in one class    | :x:     | :x:        | :heavy_check_mark:        | :heavy_check_mark:            |
+| Operators ignore DST        | :x:     | :heavy_check_mark:        | :x:        | :x:            |
+| Unclear "naïve" semantics   | :x:     | :x:        | :x:        | :x:            |
+| Silent non-existence        | :x:     | :x:        | :x:        | :x:            |
+| Guesses on ambiguity        | :x:     | :x:        | :x:        | :x:            |
+| Disambiguation breaks equality | :x:     | :x:        | :x:        | :x:            |
+| Inconsistent equality within zone | :x:     | :x:        | :x:        | :x:            |
+| datetime inherits from date | :x:     | :x:        | :heavy_check_mark:        | :x:            |
+| `timezone` isn't enough for timezone support | :heavy_check_mark:     | :heavy_check_mark:        | :x:        | :x:            |
+| DST-unaware local timezone  | :heavy_check_mark:     | :heavy_check_mark:        | :x:        | :x:            |
 
 ## Why should you care?
 
@@ -432,7 +432,7 @@ Here is how it addresses the pitfalls:
 9. IANA timezones are used everywhere, no separate classes are needed.
 10. Local datetimes handle DST transitions correctly.
 
-Feedback is welcome! ⭐️
+[Feedback is welcome!](https://github.com/ariebovenberg/whenever) :star2:
 
 ## Changelog
 
@@ -459,6 +459,10 @@ for exact changes to this article since initial publication.
 - Added Hacker News link
 - Clarification in pitfall #4, fix code example
 - Added non-emoji text to scorecard for systems that don't support it
+
+### 2024-02-18 21:10:00+01:00
+
+- A better solution for emoji :tada:
 
 [^1]: In the standard library, methods like `utcnow()` are slowly being deprecated,
       but many UTC-assuming parts remain.

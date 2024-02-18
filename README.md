@@ -36,6 +36,7 @@ rm -rf _site  # clear generated site
 - https://github.com/jsanz/gh-pages-minima-starter
 - https://blog.slowb.ro/dark-theme-for-minima-jekyll/
 - https://github.com/derekkedziora/jekyll-demo
+- https://www.fabriziomusacchio.com/blog/2021-08-16-emojis_for_Jekyll/
 
 ## Ideas
 
