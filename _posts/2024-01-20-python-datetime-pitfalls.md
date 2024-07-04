@@ -389,18 +389,20 @@ Here is how it addresses the pitfalls:
 
 1. It has distinct classes for the most common use cases:
 
+   (note: the types have been updated since the original article)
+
    ```python
    from whenever import (
-       # For the "UTC everywhere" case
-       UTCDateTime,
+       # In case you don't care about timezones
+       Instant,
        # Simple localization sans DST
        OffsetDateTime,
        # Full-featured IANA timezones
        ZonedDateTime,
-       # The local system timezone
+       # The current system timezone
+       SystemDateTime,
+       # 'Naive' local times without a timezone
        LocalDateTime,
-       # Detached from any timezones
-       NaiveDateTime,
    )
    ```
 2. Addition and subtraction take DST into account.
@@ -426,7 +428,7 @@ Here is how it addresses the pitfalls:
    ```python
    a == b
    # always equivalent to:
-   a.as_utc() == b.as_utc()
+   a.instant() == b.instant()
    ```
 8. The datetime classes don't inherit from date.
 9. IANA timezones are used everywhere, no separate classes are needed.
@@ -463,6 +465,10 @@ for exact changes to this article since initial publication.
 ### 2024-02-18 21:10:00+01:00
 
 - A better solution for emoji :tada:
+
+### 2024-10-03 19:15:00+02:00
+
+- Updated the types in the example code to match the current version of the library
 
 [^1]: In the standard library, methods like `utcnow()` are slowly being deprecated,
       but many UTC-assuming parts remain.
