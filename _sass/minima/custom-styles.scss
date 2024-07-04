@@ -17,7 +17,7 @@ h1, h2, h3, h4, h5 {
   font-family: $head-font-family;
   font-weight: 700;
   // to adjust for monospace font
-  letter-spacing: -0.025em;
+  // letter-spacing: -0.025em;
 }
 
 // To prevent superscript increasing the line height
@@ -113,9 +113,19 @@ h4, h5, h6 {
     }
   }
 
+  // Commented-out: position the anchor to the left of the heading.
+  // This doesn't work well in mobile view.
+
+  // position: relative;
+
   .anchor {
     opacity: 0;
+    // position: absolute;
+    // left: -35px;
+    // top: 0;
+    // text-decoration: none;
   }
+
 }
 
 .toc {

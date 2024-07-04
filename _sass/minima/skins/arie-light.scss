@@ -14,8 +14,8 @@ $site-title-color:      $brand-color !default;
 $text-color:            #282828 !default;
 $text-color-light:      #928373 !default;
 $code-background-color: #f9f5d7 !default;
-$background-color:      lighten(desaturate($code-background-color, 20%), 5%) !default;
-$note-background-color: #fbf1c7 !default;
+$background-color:      lighten(desaturate($code-background-color, 30%), 5%) !default;
+$note-background-color: darken($background-color, 5%) !default;
 
 $link-base-color:       $brand-color !default;
 $link-visited-color:    $brand-color-secondary !default;
