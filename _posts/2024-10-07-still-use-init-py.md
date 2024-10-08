@@ -6,13 +6,13 @@ date:   2024-10-07
 
 If you've ever googled the question
 "Why do Python packages have empty ``__init__.py`` files?",
-you could get the mistaken impression that they're required to mark a directory as a Python package.
-This is actually a common misconception—they've been optional since Python 3.3!
+you could get the idea that they're required to mark a directory as a Python package.
+This is a common misconception—they've been optional since Python 3.3!
 Why then, do most Python projects still have them?
 
 ## What are these files again?
 
-`__init__.py` files are used to mark directories on as Python packages.
+`__init__.py` files are used to mark directories as Python packages.
 For example, a file structure like this:
 
 ```
@@ -32,7 +32,7 @@ from my_package import some_module
 What you might not know is that in modern Python,
 you can omit the `__init__.py` file
 and still be able to run the same import!
-So why can't we just get rid of them?
+So why not get rid of these files altogether?
 
 ## The benefits of being explicit
 
@@ -58,8 +58,7 @@ This matters in non-obvious ways.
 Take the "services" directory for example. Are you meant to...
 
 1. import `services.component_a.one`?
-2. Or is "services" the working directory, and you import
-`component_a.one`?
+2. or `component_a.one` with "services" as the working directory?
 
 The problem is: only one of these will actually work,
 because the package internals likely assume one or the other.
@@ -115,7 +114,7 @@ you may be putting a maintenance timebomb in your codebase.
 
 When omitting `__init__.py` files,
 you're actually creating what's called an ["implicit namespace package"](https://peps.python.org/pep-0420/).
-This can have some benefits, like allowing you to split a package across multiple directories.
+This has some benefits, like allowing you to split a package across multiple directories.
 If you use namespace packages for this purpose,
 you're probably aware of the trade-offs,
 and you've likely already struggled with issues of tooling compatibility
