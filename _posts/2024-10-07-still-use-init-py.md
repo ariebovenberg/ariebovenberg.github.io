@@ -31,7 +31,8 @@ from my_package import some_module
 
 What you might not know is that in modern Python,
 you can omit the `__init__.py` file
-and still be able to run the same import.
+and still be able to run the same import!
+So why can't we just get rid of them?
 
 ## The benefits of being explicit
 
@@ -68,7 +69,7 @@ For example, if `one.py` contains:
 import component_b.three
 ```
 
-then only option 2 will work[^1].
+then only option 2 will work.
 
 Adding the proper `__init__.py`  files
 takes away the guesswork and makes the structure clear:
@@ -133,12 +134,3 @@ This isn't only helpful for other developers, it's often necesssary for tools li
 You can enforce the use of `__init__.py` files in your codebase
 [using `ruff`](https://docs.astral.sh/ruff/rules/implicit-namespace-package/)
 or a [flake8 plugin](https://pypi.org/project/flake8-no-pep420/).
-
-
-
-[^1]: Unless you're using relative imports.
-      This isn't a common practice in modern Python codebases though.
-      I suspect this is because relative imports can become confusing
-      in deep directory structures,
-      and most developers nowadays rely on their IDE to manage their imports,
-      and IDEs default to absolute imports.
