@@ -1,11 +1,14 @@
 ---
 layout: post
-title:  "Should you still be using empty __init__.py files?"
-date:   2024-10-08
+title:  "Should you still use empty __init__.py files?"
+date:   2024-10-07
 ---
 
-Since `__init__.py` files have been optional since Python 3.3,
-you may have wondered why most projects still have them—even when most of them are empty.
+If you've ever googled the question
+"Why do Python packages have empty ``__init__.py`` files?",
+you could get the mistaken impression that they're required to mark a directory as a Python package.
+This is actually a common misconception—they've been optional since Python 3.3!
+Why then, do most Python projects still have them?
 
 ## What are these files again?
 
@@ -55,9 +58,9 @@ Take the "services" directory for example. Are you meant to...
 
 1. import `services.component_a.one`?
 2. Or is "services" the working directory, and you import
-`component_a.one` directly?
+`component_a.one`?
 
-The problem is that only one of these will actually work,
+The problem is: only one of these will actually work,
 because the package internals likely assume one or the other.
 For example, if `one.py` contains:
 
@@ -93,14 +96,14 @@ isn't something you should be importing.
 
 ## Tooling needs to understand your package structure too
 
-You might think: *"I don't care about this. I know my codebase well enough.
+You might think: *"I'm not convinced. I know my codebase well enough.
 And besides, I document how to import my packages in the README."*
 
-What you're forgetting is that it's not just humans that need
+What you may forget is that it's not just humans that need
 to understand the package structure.
 Tools like `mypy` and `ruff` also need to understand what is a package and what isn't,
 in order to work correctly.
-What makes it tricky is that you may not notice problems
+What makes it extra tricky is that you may not notice problems
 at first, but they can crop up later as your codebase grows.
 Fixing these issues can be a real headache, especially if you're
 not aware of the intricacies of Python's import system.
@@ -121,11 +124,16 @@ For this reason, implicit namespace packages are rare.
 So long as you don't need the advanced features of implicit namespace packages,
 you should stick to using `__init__.py` files.
 
-## Conclusion
+## Recommendations
 
 You should use `__init__.py` files to make it clear which directories are packages and which aren't.
 This isn't only helpful for other developers, it's often necesssary for tools like
 `mypy` to work correctly.
+
+You can enforce the use of `__init__.py` files in your codebase
+[using `ruff`](https://docs.astral.sh/ruff/rules/implicit-namespace-package/)
+or a [flake8 plugin](https://pypi.org/project/flake8-no-pep420/).
+
 
 
 [^1]: Unless you're using relative imports.
