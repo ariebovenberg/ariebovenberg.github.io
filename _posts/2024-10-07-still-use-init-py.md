@@ -1,18 +1,18 @@
 ---
 layout: post
-title:  "Should you still use empty __init__.py files?"
+title:  "__init__.py files are optional. Here's why you should still use them"
 date:   2024-10-07
 ---
 
 If you've ever googled the question
 "Why do Python packages have empty ``__init__.py`` files?",
-you could get the idea that they're required to mark a directory as a Python package.
+you could get the idea that Python packages wouldn't work without them.
 This is a common misconception—they've been optional since Python 3.3!
 Why then, do most Python projects still have them?
 
 ## What are these files again?
 
-`__init__.py` files are used to mark directories as Python packages.
+`__init__.py` files are often used to mark directories as Python packages.
 For example, a file structure like this:
 
 ```
@@ -124,12 +124,16 @@ For this reason, implicit namespace packages are rare.
 So long as you don't need the advanced features of implicit namespace packages,
 you should stick to using `__init__.py` files.
 
+## Other loose ends
+
+- Although `__init__.py` files are often empty, they can also contain code.
+  For more information, see the [Python documentation](https://docs.python.org/3/tutorial/modules.html#packages).
+- You can enforce the use of `__init__.py` files in your codebase
+  [using `ruff`](https://docs.astral.sh/ruff/rules/implicit-namespace-package/)
+  or a [flake8 plugin](https://pypi.org/project/flake8-no-pep420/).
+
 ## Recommendations
 
 You should use `__init__.py` files to make it clear which directories are packages and which aren't.
 This isn't only helpful for other developers, it's often necesssary for tools like
 `mypy` to work correctly.
-
-You can enforce the use of `__init__.py` files in your codebase
-[using `ruff`](https://docs.astral.sh/ruff/rules/implicit-namespace-package/)
-or a [flake8 plugin](https://pypi.org/project/flake8-no-pep420/).

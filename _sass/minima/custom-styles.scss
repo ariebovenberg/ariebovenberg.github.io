@@ -75,6 +75,11 @@ div.home > .page-heading {
   &:visited {
     color: $brand-color-primary;
   }
+
+  &:hover {
+    text-decoration: none;
+    color: $brand-color-secondary;
+  }
 }
 
 .post-content {
