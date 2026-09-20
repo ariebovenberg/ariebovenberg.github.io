@@ -2,6 +2,8 @@ title: Arie Bovenberg
 description: ""
 baseurl: ""
 url: "https://dev.arie.bovenberg.net"
+# GitHub Pages' legacy builder forced UTC; make it explicit so local builds match.
+timezone: UTC
 
 # author:
 #   name: Arie Bovenberg
@@ -27,6 +29,14 @@ include:
 google_analytics: "G-0B2WZJQ5RK"
 permalink: blog/:title/
 markdown: kramdown
+
+sass:
+  sourcemap: development
+  # The skins use `@import` nested inside `html {}` / a media query so that each
+  # colour scheme can redefine the same variables. `@use` cannot be nested, so
+  # this stays on `@import` until the skins are restructured.
+  silence_deprecations:
+    - import
 paginate_path: "/:num/"
 date_format: "%b %-d, %Y"
 
