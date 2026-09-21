@@ -4,6 +4,14 @@ title:  "Ten Python datetime pitfalls, and what libraries are (not) doing about 
 date:   2024-01-20
 ---
 
+*Update (September 2026): this post is from early 2024, and a lot has happened since.
+For the current state of things, see
+[the pitfalls of `datetime`](https://whenever.readthedocs.io/en/latest/stdlib-pitfalls/index.html) in whenever's documentation,
+which I keep up to date—along with detailed comparisons with
+[Arrow](https://whenever.readthedocs.io/en/latest/why-not-arrow.html) and [Pendulum](https://whenever.readthedocs.io/en/latest/why-not-pendulum.html).
+This post stays up as a historical reference. I've only corrected what has
+become plain wrong (see the [changelog](#changelog)).*
+
 It's no secret that the Python datetime library has its quirks.
 Not only are there probably more than you think;
 third-party libraries don't address most of them!
@@ -123,7 +131,9 @@ sleep = wake_up - bedtime
 
 #### What's being done about it?
 
-- :heavy_check_mark: `pendulum` explicitly fixes this issue
+- :heavy_check_mark: `pendulum` explicitly fixes this issue—although changing `+`
+  while remaining a drop-in `datetime` subclass
+  [takes some guesswork](https://whenever.readthedocs.io/en/latest/why-not-pendulum.html#pendulum-add-stack).
 - :x: `heliclockter`, `arrow`, and `DateType` don't address it
 
 ## 3. The meaning of "naïve" is inconsistent
@@ -202,7 +212,10 @@ d = datetime(2023, 10, 29, 2, 30, tzinfo=paris)
 
 - :x: `pendulum` also guesses, but rather arbitrarily decides that ``1``
   is the better default[^2].
-- :x: `arrow`, `DateType` and `heliclockter` don't address the issue.
+- :x: `arrow` accepts `fold`, but
+  [drops it again](https://whenever.readthedocs.io/en/latest/why-not-arrow.html#every-operation-drops-fold)
+  on every `shift()`, `floor()`, or `range()`.
+- :x: `DateType` and `heliclockter` don't address the issue.
 
 ## 6. Disambiguation breaks equality
 
@@ -251,7 +264,9 @@ earlier == later2  # now false
 
 #### What's being done about it?
 
-- :x: None of the libraries addresses this issue
+- :x: None of the libraries addresses this issue.
+  `pendulum` adds a twist of its own: its `-` counts elapsed time but its `==` doesn't,
+  so [equal values can be an hour apart](https://whenever.readthedocs.io/en/latest/why-not-pendulum.html#pendulum-equality).
 
 ## 8. Datetime inherits from date
 
@@ -322,7 +337,10 @@ datetime(2023, 7, 1, tzinfo=my_tz)  # not valid for summer!
 
 #### What's being done about it?
 
-- :heavy_check_mark: `pendulum` and `arrow` have methods to convert to the full local timezone.
+- :heavy_check_mark: `pendulum` has methods to convert to the full local timezone.
+- :x: `arrow` used to as well, but regressed: since version 1.4.0, `'local'` is
+  [a fixed-offset snapshot](https://whenever.readthedocs.io/en/latest/why-not-arrow.html#local-is-a-snapshot-not-a-time-zone)
+  of the current UTC offset—the very pitfall described here.
 - :x: `heliclockter` has a local datetime type with the same issue,
   although a fix is in the works.
 - :x: `DateType` doesn't address this issue
@@ -343,7 +361,7 @@ Below is a summary of how the libraries address the pitfalls (:heavy_check_mark:
 | Inconsistent equality within zone | :x:     | :x:        | :x:        | :x:            |
 | datetime inherits from date | :x:     | :x:        | :heavy_check_mark:        | :x:            |
 | `timezone` isn't enough for timezone support | :heavy_check_mark:     | :heavy_check_mark:        | :x:        | :x:            |
-| DST-unaware local timezone  | :heavy_check_mark:     | :heavy_check_mark:        | :x:        | :x:            |
+| DST-unaware local timezone  | :x:     | :heavy_check_mark:        | :x:        | :x:            |
 
 ## Why should you care?
 
@@ -397,18 +415,17 @@ Here is how it addresses the pitfalls:
        Instant,
        # Simple localization sans DST
        OffsetDateTime,
-       # Full-featured IANA timezones
+       # Full-featured IANA timezones (including the system's)
        ZonedDateTime,
-       # The current system timezone
-       SystemDateTime,
        # 'Naive' local times without a timezone
-       LocalDateTime,
+       PlainDateTime,
    )
    ```
 2. Addition and subtraction take DST into account.
 3. Naïve is always naïve. UTC and local time have their own separate classes.
-4. Creating non-existent datetimes raises an exception.
-5. Ambiguous datetimes must be explicitly disambiguated.
+4. Non-existent datetimes don't pass silently: you get a warning,
+   or an exception if you ask for one.
+5. The same goes for ambiguous datetimes. No silent guessing:
 
    ```python
    ZonedDateTime(
@@ -416,11 +433,15 @@ Here is how it addresses the pitfalls:
    )  # ok: not ambiguous
    ZonedDateTime(
        2023, 10, 29, 2, tz="Europe/Paris",
-   )  # ERROR: ambiguous!
+   )  # warning: ambiguous!
    ZonedDateTime(
        2023, 10, 29, 2, tz="Europe/Paris",
-       disambiguate="later"
+       disambiguation="later"
    )  # that's better!
+   ZonedDateTime(
+       2023, 10, 29, 2, tz="Europe/Paris",
+       disambiguation="raise"
+   )  # if you'd rather get an exception
    ```
 6. Disambiguated datetimes work correctly in comparisons.
 7. Aware datetimes are equal if they occur at the same moment. No exceptions.
@@ -432,7 +453,8 @@ Here is how it addresses the pitfalls:
    ```
 8. The datetime classes don't inherit from date.
 9. IANA timezones are used everywhere, no separate classes are needed.
-10. Local datetimes handle DST transitions correctly.
+10. The system timezone is a full timezone, DST transitions included—and you
+    only get it if you ask for it.
 
 [Feedback is welcome!](https://github.com/ariebovenberg/whenever) :star2:
 
@@ -469,6 +491,14 @@ for exact changes to this article since initial publication.
 ### 2024-10-03 19:15:00+02:00
 
 - Updated the types in the example code to match the current version of the library
+
+### 2026-09-20 22:16:00+02:00
+
+- Added a note pointing to the up-to-date pitfalls page in whenever's documentation.
+- Pitfall #10: `arrow` regressed in version 1.4.0; updated the scorecard to match.
+- Added caveats for `pendulum` (pitfalls #2 and #7) and `arrow` (pitfall #5),
+  as of `pendulum` 3.2.0 and `arrow` 1.4.0.
+- Updated the whenever examples to match the current version of the library
 
 [^1]: In the standard library, methods like `utcnow()` are slowly being deprecated,
       but many UTC-assuming parts remain.
