@@ -1,33 +1,27 @@
 # My programming blog
 
+A [Jekyll](https://jekyllrb.com) site deployed to GitHub Pages by
+[a GitHub Actions workflow](.github/workflows/deploy.yml).
+
 ## Development
 
-On MacOS:
+On MacOS, with the Ruby from `~/dotfiles` already on `$PATH`
+(`sudo port install ruby40 && sudo port select --set ruby ruby40`, or
+`brew install ruby`):
 
 ```bash
-brew install rbenv  # follow additional installation instructions
-rbenv init
-curl -fsSL https://github.com/rbenv/rbenv-installer/raw/main/bin/rbenv-doctor | bash
-rbenv install 3.1.3
-
-# restart the shell
-
-# in the repo
-rbenv local 3.1.3
-
-gem install bundler jekyll
-
-bundle install
+ruby -v          # 4.0.x, not the 2.6 in /usr/bin
+bundle install   # gems land in vendor/bundle, ignored by git
 ```
 
 ### Useful commands
 
 ```bash
-bundle update
-bundle exec jekyll serve --incremental
-rm -rf _site  # clear generated site
+bundle exec jekyll serve --livereload  # http://localhost:4000
+bundle update                          # bump gems within Gemfile constraints
+bundle outdated                        # what could be bumped further
+rm -rf _site .jekyll-cache             # clear generated site
 ```
-
 
 ## Resources used
 
@@ -41,4 +35,4 @@ rm -rf _site  # clear generated site
 ## Ideas
 
 - Categories page
-- jekyll remote theme
+- Migrate the Sass skins from `@import` to `@use`

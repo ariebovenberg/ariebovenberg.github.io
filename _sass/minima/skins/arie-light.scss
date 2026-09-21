@@ -14,12 +14,15 @@ $site-title-color:      $brand-color !default;
 $text-color:            #282828 !default;
 $text-color-light:      #928373 !default;
 $code-background-color: #f9f5d7 !default;
-$background-color:      lighten(desaturate($code-background-color, 30%), 5%) !default;
-$note-background-color: darken($background-color, 5%) !default;
+// = lighten(desaturate($code-background-color, 30%), 5%)
+$background-color:      #f9f8f0 !default;
+// = darken($background-color, 5%)
+$note-background-color: #f2f0de !default;
 
 $link-base-color:       $brand-color !default;
 $link-visited-color:    $brand-color-secondary !default;
-$link-hover-color:      lighten($link-base-color, 15%) !default;
+// = lighten($link-base-color, 15%)
+$link-hover-color:      #ee4e3d !default;
 
 $border-color-01:       #928374 !default;
 $border-color-02:       #7c6f64 !default;
