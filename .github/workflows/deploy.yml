@@ -3,6 +3,8 @@ name: Deploy site
 on:
   push:
     branches: [main]
+  # Build (but never deploy) on PRs, so CI breakage surfaces before main.
+  pull_request:
   workflow_dispatch:
 
 # Nothing is granted by default; each job asks for what it needs.
@@ -37,6 +39,7 @@ jobs:
 
   deploy:
     needs: build
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
