@@ -2,6 +2,7 @@
 layout: post
 title:  "Is your Python code vulnerable to log injection?"
 date:   2021-12-27
+description: "Python's logging is safe from log4j-style exploits, but untrusted input and f-strings still let attackers forge logs, stall your server, or leak secrets."
 ---
 
 Following the news on log4j lately,
