@@ -1,8 +1,9 @@
 ---
 layout: post
-title:  "__init__.py files are optional. Here's why you should still use them"
+title:  "`__init__.py` files are optional. Here's why you should still use them"
 date:   2024-10-07
-description: "__init__.py files have been optional since Python 3.3. So why keep them? Without them, neither developers nor tools like mypy can tell what's a package."
+tags: [python, packaging]
+description: "`__init__.py` files have been optional since Python 3.3. So why keep them? Without them, neither developers nor tools like mypy can tell what's a package."
 ---
 
 If you've ever googled the question

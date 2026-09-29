@@ -1,0 +1,117 @@
+/*
+ * IBM Plex, self-hosted and subset by script/subset-fonts.
+ *
+ * Each Plex face has a metric-matched fallback face built from a local system
+ * font, so swapping in Plex moves nothing. size-adjust matches average advance
+ * width over the posts' prose (mono: the fixed advance); ascent/descent
+ * overrides reproduce Plex's 1.025/0.275em, divided by size-adjust because
+ * size-adjust scales them too.
+ */
+
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("../fonts/plex-serif-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("../fonts/plex-serif-400-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("../fonts/plex-serif-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("../fonts/plex-mono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("../fonts/plex-mono-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Fallback: Georgia (macOS, Windows) */
+@font-face {
+  font-family: "IBM Plex Serif Georgia";
+  src: local("Georgia");
+  font-weight: 400;
+  font-style: normal;
+  size-adjust: 106.13%;
+  ascent-override: 96.58%;
+  descent-override: 25.91%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "IBM Plex Serif Georgia";
+  src: local("Georgia Italic"), local("Georgia-Italic");
+  font-weight: 400;
+  font-style: italic;
+  size-adjust: 93.42%;
+  ascent-override: 109.72%;
+  descent-override: 29.44%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "IBM Plex Serif Georgia";
+  src: local("Georgia Bold"), local("Georgia-Bold");
+  font-weight: 600;
+  font-style: normal;
+  size-adjust: 94.18%;
+  ascent-override: 108.84%;
+  descent-override: 29.20%;
+  line-gap-override: 0%;
+}
+
+/* Fallback: Menlo (macOS) */
+@font-face {
+  font-family: "IBM Plex Mono Menlo";
+  src: local("Menlo Regular"), local("Menlo-Regular");
+  font-weight: 400;
+  size-adjust: 99.66%;
+  ascent-override: 102.85%;
+  descent-override: 27.59%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "IBM Plex Mono Menlo";
+  src: local("Menlo Bold"), local("Menlo-Bold");
+  font-weight: 600;
+  size-adjust: 99.66%;
+  ascent-override: 102.85%;
+  descent-override: 27.59%;
+  line-gap-override: 0%;
+}
+
+/* Fallback: Consolas (Windows) */
+@font-face {
+  font-family: "IBM Plex Mono Consolas";
+  src: local("Consolas");
+  font-weight: 400;
+  size-adjust: 109.13%;
+  ascent-override: 93.92%;
+  descent-override: 25.20%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "IBM Plex Mono Consolas";
+  src: local("Consolas Bold"), local("Consolas-Bold");
+  font-weight: 600;
+  size-adjust: 109.13%;
+  ascent-override: 93.92%;
+  descent-override: 25.20%;
+  line-gap-override: 0%;
+}

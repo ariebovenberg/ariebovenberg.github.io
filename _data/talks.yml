@@ -1,0 +1,12 @@
+# Talks, newest first. Fields: title, year, event, summary, video, slides (optional).
+- title: "Taking Generators Too Far: Writing a PDF from Scratch in Python"
+  year: 2026
+  event: PyCon US 2026
+  summary: PDFs feel like a black box. Writing a PDF writer from scratch is a good way to open it up — and a chance to push generators well past their usual job.
+  video: https://www.youtube.com/watch?v=AeZWJuq9G4k
+
+- title: "Broken `__slots__` are a silent performance killer — let's fix them!"
+  year: 2025
+  event: EuroPython 2025, Prague
+  summary: Slots save memory and speed up attribute access, unless a subtle mistake in the class hierarchy quietly undoes it. How to spot broken slots, and how to catch them automatically.
+  video: https://www.youtube.com/watch?v=87DoVbgtuRA

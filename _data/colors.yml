@@ -1,0 +1,16 @@
+# Hue names map to --c-* tokens (_sass/tokens.css). Keep each set small (≤ 6):
+# beyond that the colours stop being distinguishable and stop meaning anything.
+# Anything not listed gets a muted dot.
+tags:
+  # python is on every post, so a hue would carry no information: muted.
+  datetime: aqua
+  packaging: blue
+  pydantic: purple
+  security: red
+  performance: orange
+languages:
+  Python: yellow
+  Rust: orange
+status:
+  active: green
+  # archived: intentionally unmapped → muted, rendered hollow

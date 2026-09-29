@@ -1,0 +1,5 @@
+{%- comment -%}
+  Renders one line of Markdown (a title or summary) as inline HTML: `code`, emphasis
+  and smart quotes, without the wrapping <p>. Usage: {% include inline-md.html text=page.title %}
+{%- endcomment -%}
+{{- include.text | markdownify | remove: '<p>' | remove: '</p>' | strip -}}

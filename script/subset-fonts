@@ -1,0 +1,31 @@
+#!/bin/sh
+# Rebuild assets/fonts/*.woff2 from the IBM Plex npm packages.
+# Usage: script/subset-fonts   (needs curl and uv; nothing is installed into the repo)
+set -eu
+
+UNICODES="U+0020-007E,U+00A0-00FF,U+2013-2014,U+2018-2019,U+201C-201D,U+2026,U+21A9,U+25B6"
+OUT="$(cd "$(dirname "$0")/.." && pwd)/assets/fonts"
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
+
+fetch() {
+  version=$(curl -fsS "https://registry.npmjs.org/@ibm/$1/latest" | sed -E 's/.*"version":"([^"]+)".*/\1/')
+  mkdir -p "$TMP/$1"
+  curl -fsSL "https://registry.npmjs.org/@ibm/$1/-/$1-$version.tgz" | tar xz -C "$TMP/$1" --strip-components 1
+}
+
+subset() {
+  uvx --quiet --from 'fonttools[woff]' pyftsubset "$TMP/$1/fonts/complete/woff2/$2.woff2" \
+    --unicodes="$UNICODES" --layout-features='kern,liga,calt,ccmp,locl,mark,mkmk' \
+    --no-hinting --flavor=woff2 --output-file="$OUT/$3.woff2"
+}
+
+fetch plex-mono
+fetch plex-serif
+subset plex-mono IBMPlexMono-Regular plex-mono-400
+subset plex-mono IBMPlexMono-SemiBold plex-mono-600
+subset plex-serif IBMPlexSerif-Regular plex-serif-400
+subset plex-serif IBMPlexSerif-Italic plex-serif-400-italic
+subset plex-serif IBMPlexSerif-SemiBold plex-serif-600
+install -m 644 "$TMP/plex-serif/LICENSE.txt" "$OUT/OFL.txt"
+ls -l "$OUT"

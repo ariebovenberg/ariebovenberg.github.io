@@ -1,0 +1,23 @@
+---
+permalink: /projects
+layout: list
+title: Projects
+nav: projects
+prompt: ls projects/
+intro: &intro Open-source libraries I’ve written. Most are Python; some have Rust inside.
+description: *intro
+---
+<ol class="entries">
+{%- for p in site.data.projects %}
+  {%- assign hue = site.data.colors.status[p.status] -%}
+  {%- if p.status == "archived" %}{% assign hollow = true %}{% else %}{% assign hollow = false %}{% endif -%}
+  {%- capture aside %}{% include dot.html label=p.status hue=hue hollow=hollow %}{% endcapture -%}
+  {%- capture meta -%}
+    <a href="{{ p.repo }}">github</a>
+    {%- if p.docs %}<a href="{{ p.docs }}">docs</a>{% endif -%}
+    {%- for lang in p.language %}{% assign hue = site.data.colors.languages[lang] %}{% include dot.html label=lang hue=hue %}{% endfor -%}
+  {%- endcapture -%}
+  {%- capture summary %}{% include inline-md.html text=p.summary %}{% endcapture -%}
+  {%- include entry.html aside=aside href=p.repo title=p.name summary=summary meta=meta level=2 %}
+{%- endfor %}
+</ol>

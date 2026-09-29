@@ -1,0 +1,549 @@
+/*
+ * Site stylesheet. Selectors match what
+ * Jekyll + kramdown + Rouge emit (post body in .post-content, footnotes as
+ * a.footnote / div.footnotes, code as div.highlighter-rouge > div.highlight >
+ * pre.highlight > code). All values come from tokens.css.
+ */
+
+/* ── Reset-ish ── */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-serif);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+img, svg, video { max-width: 100%; height: auto; }
+::selection { background: var(--accent); color: var(--bg); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a:hover { text-decoration-thickness: 2px; }
+
+.skip {
+  position: absolute; left: -999px; top: 0;
+  font-family: var(--font-mono); font-size: var(--text-small);
+  background: var(--code-bg); padding: 0.5rem 1rem;
+}
+.skip:focus { left: var(--gutter); }
+
+/* ── Page frame ── */
+.site-header,
+.page,
+.site-footer {
+  width: 100%;
+  max-width: calc(var(--measure) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.site-header { padding-top: 3rem; }
+.page { padding-top: var(--gap-section); }
+.site-footer { padding-bottom: 5rem; }
+
+/* ── Header: prompt + nav ── */
+.prompt, .site-nav {
+  font-family: var(--font-mono);
+  font-size: var(--text-nav);
+  line-height: 1.6;
+}
+.prompt { margin: 0 0 0.6rem; color: var(--muted); overflow-wrap: anywhere; }
+.prompt .user { color: var(--prompt-user); }
+.prompt .path { color: var(--prompt-path); }
+.prompt .cmd  { color: var(--fg); }
+
+.site-nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
+.site-nav a { color: var(--muted); text-decoration: none; }
+.site-nav a:hover { color: var(--fg); }
+.site-nav a[aria-current] { color: var(--accent); }
+.site-nav a[aria-current]::before { content: "["; }
+.site-nav a[aria-current]::after  { content: "]"; }
+
+/* ── Titles ── */
+.title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-h1);
+  line-height: var(--leading-tight);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--strong);
+  text-wrap: balance;
+}
+/* Terminal cursor after the page title: decorative, CSS-only, no blink. */
+.title::after {
+  content: "";
+  display: inline-block;
+  width: 0.42em;
+  height: 0.82em;
+  margin-left: 0.35em;
+  vertical-align: -0.06em;
+  background: var(--cursor);
+}
+
+/* ── Post ── */
+.post-header { margin-bottom: 2.25rem; padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+.post-meta {
+  margin: 0 0 1.1rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--muted);
+}
+.post-meta .tags { margin-left: 1.25em; }
+
+.post-content > p:first-child {
+  font-size: var(--text-lede);
+  line-height: 1.65;
+  color: var(--lede);
+}
+.post-content p,
+.post-content ul,
+.post-content ol { margin: 0 0 1.5rem; }
+.post-content li + li { margin-top: 0.4rem; }
+
+.post-content h2,
+.post-content h3 {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--strong);
+  text-wrap: balance;
+}
+.post-content h2 { font-size: var(--text-h2); margin: 2.75rem 0 1rem; }
+.post-content h3 { font-size: calc(var(--text-h2) * 0.85); margin: 2rem 0 0.75rem; }
+
+/* Numbered headings: opt-in by wrapping a section in
+   <div class="numbered" markdown="1"> … </div> in the post's Markdown. */
+.numbered { counter-reset: item; }
+.numbered > h2::before {
+  counter-increment: item;
+  content: counter(item, decimal-leading-zero);
+  display: inline-block;
+  min-width: 2.2em;
+  font-size: 0.68em;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.post-content blockquote {
+  margin: 1.75rem 0;
+  padding: 0;
+  font-size: var(--text-lede);
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--lede);
+}
+.post-content blockquote p { margin: 0; }
+.post-content blockquote > p:first-child::before {
+  content: "> ";
+  font-family: var(--font-mono);
+  font-style: normal;
+  color: var(--accent);
+}
+
+.post-content hr { border: 0; border-top: 1px dashed var(--rule); margin: 2.5rem 0; }
+
+/* Inline code */
+.post-content :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  color: var(--sx-string);
+}
+
+/* ── Code blocks: "slab" ── */
+div.highlighter-rouge {
+  position: relative;
+  margin: 1.75rem 0;
+  background: var(--code-bg);
+}
+/* Optional filename bar: add {: data-title="example.py"} after the fence.
+   Verify where kramdown puts the attribute; adjust the selector if needed. */
+div.highlighter-rouge[data-title]::before {
+  content: attr(data-title);
+  display: block;
+  padding: 0.35rem 1.25rem;
+  background: var(--code-bar);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.4;
+  color: var(--muted);
+}
+/* Language label, right side of the bar (only when a bar exists). */
+div.highlighter-rouge[data-title]::after {
+  position: absolute;
+  top: 0.35rem;
+  right: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.4;
+  color: var(--muted);
+}
+div.language-python[data-title]::after { content: "python"; }
+div.language-rust[data-title]::after   { content: "rust"; }
+div.language-toml[data-title]::after   { content: "toml"; }
+div.language-bash[data-title]::after,
+div.language-shell[data-title]::after  { content: "shell"; }
+
+pre.highlight {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-code);
+  line-height: var(--leading-code);
+  color: var(--fg);
+  tab-size: 4;
+}
+pre.highlight code { font: inherit; }
+
+/* Rouge token classes → gruvbox tokens */
+.highlight .k, .highlight .kn, .highlight .kd, .highlight .kr,
+.highlight .kp, .highlight .ow            { color: var(--sx-keyword); }
+.highlight .kc, .highlight .no            { color: var(--sx-constant); }
+.highlight .kt, .highlight .nc            { color: var(--sx-type); }
+.highlight .nf, .highlight .fm            { color: var(--sx-function); }
+.highlight .nb, .highlight .bp            { color: var(--sx-builtin); }
+.highlight .nd                            { color: var(--sx-builtin); }
+.highlight .ne                            { color: var(--sx-error); }
+.highlight .s, .highlight .s1, .highlight .s2, .highlight .sa,
+.highlight .sb, .highlight .sc, .highlight .se, .highlight .si,
+.highlight .sd, .highlight .sh            { color: var(--sx-string); }
+.highlight .m, .highlight .mi, .highlight .mf, .highlight .mh,
+.highlight .mo, .highlight .il            { color: var(--sx-number); }
+.highlight .c, .highlight .c1, .highlight .cm, .highlight .cs,
+.highlight .ch, .highlight .cp            { color: var(--sx-comment); font-style: italic; }
+.highlight .err                           { color: var(--sx-error); }
+
+/* pycon / shell sessions */
+.highlight .gp                            { color: var(--accent); }
+.highlight .go, .highlight .gt,
+.highlight .gr                            { color: var(--muted); }
+
+/* ── Footnotes (kramdown) ── */
+/* kramdown puts role="doc-noteref" on the <a>, so match the <sup> by its id. */
+sup[id^="fnref:"] { line-height: 0; }
+a.footnote {
+  font-family: var(--font-mono);
+  font-size: 0.7em;
+  text-decoration: none;
+}
+a.footnote::before { content: "["; }
+a.footnote::after  { content: "]"; }
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--rule);
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  line-height: 1.6;
+  color: var(--muted);
+}
+.footnotes ol { padding-left: 2.25rem; margin: 0; }
+.footnotes li::marker { content: "[" counter(list-item) "]  "; color: var(--accent); }
+.footnotes li + li { margin-top: 0.5rem; }
+.footnotes p { margin: 0; }
+
+/* ── List pages: home, talks, projects ── */
+.intro {
+  margin: 0.9rem 0 3.5rem;
+  font-size: calc(var(--text-body) * 1.05);
+  line-height: 1.6;
+  color: var(--lede);
+}
+.year { margin-bottom: 2.5rem; }
+.year-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 1.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 400;
+  color: var(--accent);
+}
+.year-label::after { content: ""; flex: 1; border-top: 1px solid var(--rule); }
+
+.entries { list-style: none; margin: 0; padding: 0; }
+.entry {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  column-gap: 1.5rem;
+  margin-bottom: 2.25rem;
+}
+.entry-aside {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  line-height: 2.1;
+  color: var(--muted);
+}
+.entry-title {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-list-title);
+  line-height: 1.4;
+  font-weight: 600;
+  text-wrap: balance;
+}
+.entry-title a { color: var(--strong); text-decoration: none; }
+.entry-title a:hover { color: var(--accent); }
+.entry-summary {
+  margin: 0 0 0.4rem;
+  font-size: calc(var(--text-body) * 0.95);
+  line-height: 1.6;
+  color: var(--lede);
+}
+.entry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--muted);
+}
+
+/* ── Footer ── */
+.site-footer .inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 3rem;
+  padding-top: 1.1rem;
+  border-top: 1px dashed var(--rule);
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--muted);
+}
+
+/* ── Beyond the reference: elements real posts use ── */
+
+.post-content h4 {
+  margin: 1.75rem 0 0.75rem;
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--strong);
+}
+
+/* Titles are already mono: code in them reads as part of the title. */
+.title code,
+.entry-title code { font: inherit; color: inherit; }
+/* Code in list summaries looks like inline code in posts. */
+.entry-summary code {
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  color: var(--sx-string);
+}
+
+/* Tables and footnotes are already mono; don't shrink their inline code further. */
+.post-content .table-wrap code,
+.post-content .footnotes code { font-size: inherit; }
+/* In the TOC, code reads as part of the entry: same size and colour as the link. */
+.post-content .toc code { font-size: inherit; color: inherit; }
+
+/* About page portrait, floated beside the text. */
+.post-content .portrait {
+  float: right;
+  width: min(12.5rem, 40%);
+  margin: 0.4rem 0 2.5rem 1.5rem;
+}
+.post-content .portrait img { display: block; width: 100%; height: auto; }
+/* A float can outrun a short page; keep the footer below it. */
+.site-footer { clear: both; }
+
+/* ── Narrow screens ── */
+@media (max-width: 40rem) {
+  .entry { grid-template-columns: minmax(0, 1fr); }
+  .entry-aside { line-height: 1.6; margin-bottom: 0.2rem; }
+  /* Code slabs run edge to edge; the code scrolls, the page never does. */
+  div.highlighter-rouge { margin-inline: calc(-1 * var(--gutter)); }
+  pre.highlight, div.highlighter-rouge[data-title]::before { padding-inline: var(--gutter); }
+  div.highlighter-rouge[data-title]::after { right: var(--gutter); }
+}
+
+@media print {
+  .site-nav, .prompt, .title::after { display: none; }
+}
+
+/* ══════════════ Tables, table of contents, list dots ══════════════
+   Their tokens live in tokens.css. */
+
+/* ── Anchor targets ── */
+.post-content :is(h2, h3)[id] { scroll-margin-top: 1.5rem; }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ══════════════ Tables: "slab" ══════════════
+   kramdown emits a bare <table>. The post layout wraps it:
+   {{ content | replace: '<table', '<div class="table-wrap"><table' | replace: '</table>', '</table></div>' }} */
+.table-wrap {
+  margin: 1.75rem 0;
+  overflow-x: auto;              /* wide tables scroll inside the slab, never the page */
+  background: var(--code-bg);
+}
+.table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+.table-wrap th {
+  padding: 0.45rem 1rem;
+  background: var(--code-bar);
+  font-size: var(--text-meta);
+  font-weight: 400;
+  color: var(--muted);
+  text-align: left;
+  white-space: nowrap;
+}
+.table-wrap td {
+  padding: 0.55rem 1rem;
+  vertical-align: top;
+  color: var(--fg);
+}
+/* kramdown alignment (|:---:| / |---:|) arrives as inline text-align and wins. */
+
+/* Status marks: {% include mark.html s="yes|partly|no" %} renders [x] / [~] / [ ].
+   Shape carries the meaning; colour only reinforces it. */
+.mark {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  white-space: pre;          /* keep the space inside "[ ]" */
+}
+/* [x] and [~] are bold; [ ] stays regular and quiet (3:1), so ink weight separates them. */
+.mark-yes    { color: var(--status-yes); font-weight: 600; }
+.mark-partly { color: var(--status-partly); font-weight: 600; }
+.mark-no     { color: var(--status-no); }
+/* In running text, size marks like inline code. */
+.post-content :is(p, li):not(.table-note) .mark { font-size: 0.84em; }
+
+/* Legend/caption line under a table: add {: .table-note} after the paragraph. */
+.post-content .table-note {
+  margin-top: -1rem;             /* sit close to the slab above */
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--muted);
+}
+
+/* ══════════════ Table of contents ══════════════
+   One element, two presentations:
+   - default: inline slab where the author puts {% include toc.html %}
+   - ≥ 82rem: lifted into the right margin, sticky; the grep line hides */
+.toc {
+  margin: 2rem 0 2.5rem;
+  background: var(--code-bg);
+}
+.toc-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.35rem 1.25rem;
+  background: var(--code-bar);
+  font-family: var(--font-mono);
+}
+.toc-label {
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--strong);
+}
+.toc-cmd {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.post-content #markdown-toc {
+  list-style: none;
+  margin: 0;
+  padding: 0.9rem 1.25rem 1rem;
+  counter-reset: toc;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  line-height: 1.6;
+}
+.post-content #markdown-toc li { margin: 0 0 0.3rem; counter-increment: toc; }
+.post-content #markdown-toc ul,
+.post-content #markdown-toc ol { display: none; }  /* h2 only; also set toc_levels */
+#markdown-toc a { color: var(--fg); text-decoration: none; }
+#markdown-toc a:hover { color: var(--accent); }
+
+/* Numbers only when asked for: {% include toc.html numbered=true %} */
+.toc--numbered #markdown-toc li { display: flex; gap: 0.9rem; }
+.toc--numbered #markdown-toc li::before {
+  content: counter(toc, decimal-leading-zero);
+  flex: none;
+  color: var(--accent);
+}
+
+/* ── Wide screens: margin + sticky ──
+   Breakpoint = column + gap + TOC + gutters, so the text column never moves. */
+@media (min-width: 82rem) {
+  .post-content { position: relative; }
+  .toc {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(100% + var(--toc-gap));
+    width: var(--toc-width);
+    margin: 0;
+    background: none;
+  }
+  .toc-inner { position: sticky; top: 2rem; }
+  .toc-bar { padding: 0 0 0.6rem; background: none; }
+  .toc-label { font-weight: 400; color: var(--muted); }
+  .toc-cmd { display: none; }
+  .post-content #markdown-toc {
+    padding: 0;
+    font-size: var(--text-meta);
+    line-height: 1.5;
+  }
+  .post-content #markdown-toc li { margin-bottom: 0.5rem; }
+  #markdown-toc a { color: var(--muted); }
+  .toc--numbered #markdown-toc li::before { color: var(--muted); }
+
+  /* Current section (set by toc.js; absent without JS, which is fine). */
+  #markdown-toc a[aria-current] { color: var(--strong); }
+  .toc--numbered #markdown-toc li:has(> a[aria-current])::before { color: var(--accent); }
+}
+
+/* ── Narrow screens: slabs run edge to edge, like code ── */
+@media (max-width: 40rem) {
+  .table-wrap,
+  .toc { margin-inline: calc(-1 * var(--gutter)); }
+  .table-wrap th, .table-wrap td { padding-inline: var(--gutter); }
+  .toc-bar, .post-content #markdown-toc { padding-inline: var(--gutter); }
+}
+
+/* ══════════════ List colour: dots ══════════════
+   Small hue dots next to post tags, project languages and project status.
+   Hue names (not raw colours) are the contract, mapped in _data/colors.yml;
+   the --c-* tokens alias palette tokens, so both themes just work. */
+.dot-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  white-space: nowrap;
+}
+.dot {
+  flex: none;
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: var(--dot, var(--muted));   /* unmapped → muted */
+}
+/* Hollow = "inactive" (e.g. archived): shape differs, not just colour. */
+.dot--hollow {
+  background: none;
+  box-shadow: inset 0 0 0 1.5px var(--dot, var(--muted));
+}

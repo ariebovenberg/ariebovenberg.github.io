@@ -23,16 +23,16 @@ bundle outdated                        # what could be bumped further
 rm -rf _site .jekyll-cache             # clear generated site
 ```
 
-## Resources used
+## Where things live
 
-- https://dfederm.com/creating-a-blog-using-github-pages/
-- https://github.com/jekyll/minima
-- https://github.com/jsanz/gh-pages-minima-starter
-- https://blog.slowb.ro/dark-theme-for-minima-jekyll/
-- https://github.com/derekkedziora/jekyll-demo
-- https://www.fabriziomusacchio.com/blog/2021-08-16-emojis_for_Jekyll/
+- `_posts/`: the posts. `_data/talks.yml` and `_data/projects.yml` feed the
+  talks and projects pages.
+- `_sass/tokens.css`: every colour, type size and layout width, for both the
+  light and the dark theme.
+- `assets/fonts/`: IBM Plex, subset and self-hosted.
+  `script/subset-fonts` rebuilds the files (needs `curl` and `uv`).
+- `AGENTS.md`: the conventions to keep when changing the site.
 
 ## Ideas
 
 - Categories page
-- Migrate the Sass skins from `@import` to `@use`

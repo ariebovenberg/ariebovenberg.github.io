@@ -1,0 +1,8 @@
+---
+layout: default
+---
+<h1 class="title">{{ page.title | escape }}</h1>
+{%- if page.intro %}
+<p class="intro">{{ page.intro }}</p>
+{%- endif %}
+{{ content }}

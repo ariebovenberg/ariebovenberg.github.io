@@ -1,60 +1,33 @@
 title: Arie Bovenberg
-description: ""
 baseurl: ""
 url: "https://dev.arie.bovenberg.net"
 # GitHub Pages' legacy builder forced UTC; make it explicit so local builds match.
 timezone: UTC
 
-# author:
-#   name: Arie Bovenberg
-#   email: null
-show_excerpts: true
-minima:
-  skin: arie-autodark
-  date_format: "%b %-d, %Y"
-  social_links:
-    github:  ariebovenberg
-    linkedin: ariebovenberg
-    # devto: ariebovenberg
-    # twitter: ariebovenberg
-
-header_pages:
-  - _pages/home.md
-  - _pages/blog.md
-  - _pages/about.md
-
 include:
   - _pages
 
-google_analytics: "G-0B2WZJQ5RK"
+goatcounter: "https://ariebovenberg.goatcounter.com/count"
 permalink: blog/:title/
 markdown: kramdown
+kramdown:
+  toc_levels: 2..2   # {:toc} lists h2 only (see _includes/toc.html)
 
 sass:
   sourcemap: development
-  # The skins use `@import` nested inside `html {}` / a media query so that each
-  # colour scheme can redefine the same variables. `@use` cannot be nested, so
-  # this stays on `@import` until the skins are restructured.
-  silence_deprecations:
-    - import
-paginate_path: "/:num/"
-date_format: "%b %-d, %Y"
-
-# disqus:
-#   shortname: ariebovenbergdevblog
+  style: compressed
 
 plugins:
   - jekyll-feed
-  - jekyll-paginate
   - jekyll-seo-tag
   - jekyll-sitemap
-  - jemoji
 
 exclude:
   - Gemfile
   - Gemfile.lock
   - .gitignore
-  - LICENSE
   - README.md
-  - _code
   - .git
+  - AGENTS.md
+  - CLAUDE.md
+  - script/

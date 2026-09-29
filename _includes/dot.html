@@ -1,0 +1,10 @@
+{%- comment -%}
+  Coloured dot + label, for list meta lines. Include parameters can't take
+  bracket lookups, so assign the hue first:
+    {% assign hue = site.data.colors.tags[tag] %}{% include dot.html label=tag hue=hue %}
+    {% assign hue = site.data.colors.languages[lang] %}{% include dot.html label=lang hue=hue %}
+    {% assign hue = site.data.colors.status[p.status] %}{% include dot.html label=p.status hue=hue hollow=true %}
+  hue is a name (red|orange|yellow|green|aqua|blue|purple). Missing → muted dot.
+  The dot is decorative; the label carries the meaning.
+{%- endcomment -%}
+<span class="dot-label"><span class="dot{% if include.hollow %} dot--hollow{% endif %}"{% if include.hue %} style="--dot: var(--c-{{ include.hue }})"{% endif %} aria-hidden="true"></span>{{ include.label }}</span>

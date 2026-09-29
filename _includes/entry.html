@@ -1,0 +1,18 @@
+{%- comment -%}
+  One entry on a list page (home, talks, projects).
+  Parameters, all required:
+    aside    HTML for the narrow left column (date, year, status)
+    href     where the title links to
+    title    entry title, inline Markdown
+    summary  one-paragraph summary, already rendered to inline HTML
+    meta     HTML for the meta line; each item is its own <span> or <a>
+    level    heading level of the title (3 under a year heading, else 2)
+{%- endcomment -%}
+<li class="entry">
+  <span class="entry-aside">{{ include.aside }}</span>
+  <div>
+    <h{{ include.level }} class="entry-title"><a href="{{ include.href }}">{% include inline-md.html text=include.title %}</a></h{{ include.level }}>
+    <p class="entry-summary">{{ include.summary }}</p>
+    <p class="entry-meta">{{ include.meta }}</p>
+  </div>
+</li>

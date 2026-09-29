@@ -1,0 +1,50 @@
+# Curated project list, in display order. Fields: name, repo, docs (optional),
+# summary, language (list, hues in colors.yml), status (active | archived).
+- name: whenever
+  repo: https://github.com/ariebovenberg/whenever
+  docs: https://whenever.readthedocs.io
+  summary: Typed, DST-safe datetimes for Python, with a Rust core.
+  language: [Python, Rust]
+  status: active
+
+- name: slotscheck
+  repo: https://github.com/ariebovenberg/slotscheck
+  docs: https://slotscheck.readthedocs.io
+  summary: Finds broken `__slots__` definitions before they quietly cost you memory and speed.
+  language: [Python]
+  status: active
+
+- name: pdfje
+  repo: https://github.com/ariebovenberg/pdfje
+  docs: https://pdfje.readthedocs.io
+  summary: Writes PDFs from declarative Python, with no required dependencies.
+  language: [Python]
+  status: active
+
+- name: quiz
+  repo: https://github.com/ariebovenberg/quiz
+  docs: https://quiz.readthedocs.io
+  summary: A capable GraphQL client for Python.
+  language: [Python]
+  status: archived
+
+- name: snug
+  repo: https://github.com/ariebovenberg/snug
+  docs: https://snug.readthedocs.io
+  summary: Reusable, composable API wrappers built on generators.
+  language: [Python]
+  status: archived
+
+- name: quacks
+  repo: https://github.com/ariebovenberg/quacks
+  docs: https://quacks.readthedocs.io
+  summary: Better read-only Protocols for mypy.
+  language: [Python]
+  status: archived
+
+- name: gentools
+  repo: https://github.com/ariebovenberg/gentools
+  docs: https://gentools.readthedocs.io
+  summary: Tools for generators, generator functions, and generator-based coroutines.
+  language: [Python]
+  status: archived

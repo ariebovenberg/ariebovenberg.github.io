@@ -1,0 +1,27 @@
+---
+permalink: /
+layout: list
+title: Arie Bovenberg
+nav: blog
+prompt: ls -t posts/
+intro: &intro Software engineer in the Netherlands. I write about Python, datetimes, performance, and what makes code good. I don't post often, but I make each one count.
+description: *intro
+---
+{%- assign years = site.posts | group_by_exp: "p", "p.date | date: '%Y'" -%}
+{%- for year in years %}
+<section class="year" aria-labelledby="y{{ year.name }}">
+  <h2 class="year-label" id="y{{ year.name }}">{{ year.name }}</h2>
+  <ol class="entries">
+  {%- for post in year.items %}
+    {%- capture aside %}<time datetime="{{ post.date | date: "%F" }}">{{ post.date | date: "%b %d" }}</time>{% endcapture -%}
+    {%- capture meta %}{% for t in post.tags %}{% assign hue = site.data.colors.tags[t] %}{% include dot.html label=t hue=hue %}{% endfor %}{% endcapture -%}
+    {%- if post.description -%}
+      {%- capture summary %}{% include inline-md.html text=post.description %}{% endcapture -%}
+    {%- else -%}
+      {%- assign summary = post.excerpt | strip_html | strip | normalize_whitespace | smartify -%}
+    {%- endif -%}
+    {%- include entry.html aside=aside href=post.url title=post.title summary=summary meta=meta level=3 %}
+  {%- endfor %}
+  </ol>
+</section>
+{%- endfor %}

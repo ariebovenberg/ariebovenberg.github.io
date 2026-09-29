@@ -1,14 +1,15 @@
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  {%- seo -%}
+  {%- seo %}
+  <link rel="preload" href="{{ "/assets/fonts/plex-serif-400.woff2" | relative_url }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
-  {%- feed_meta -%}
-  {%- if jekyll.environment == 'production' and site.google_analytics -%}
-    {%- include google-analytics.html -%}
-  {%- endif -%}
-
-  {%- include custom-head.html -%}
-  
+  {%- comment %} Mirrors --bg in _sass/tokens.css; meta tags can't read CSS variables. {% endcomment %}
+  <meta name="theme-color" content="#eeebe3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1d2021" media="(prefers-color-scheme: dark)">
+  {%- feed_meta %}
+  {%- include favicons.html %}
+  {%- if jekyll.environment == 'production' and site.goatcounter %}
+  {%- include goatcounter.html %}
+  {%- endif %}
 </head>

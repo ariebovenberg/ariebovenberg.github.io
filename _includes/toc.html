@@ -1,0 +1,21 @@
+{%- comment -%}
+  Table of contents. Usage, where the TOC should appear in a post:
+    {% include toc.html %}                 plain list
+    {% include toc.html numbered=true %}   01, 02, … (keep in sync with numbered headings;
+                                           exclude unnumbered ones with {: .no_toc})
+  The grep line comes from front matter `toc_cmd`, defaulting to the post's own file.
+  Liquid runs before kramdown, so the {:toc} marker below is still processed.
+  VERIFY: kramdown parses inside <nav>/<div> only with markdown="1"; check the output.
+{%- endcomment -%}
+{%- capture default_cmd -%}grep '^## ' {{ page.slug }}.md{%- endcapture -%}
+{%- assign toc_cmd = page.toc_cmd | default: default_cmd -%}
+<nav class="toc{% if include.numbered %} toc--numbered{% endif %}" id="contents" aria-labelledby="toc-label" markdown="1">
+<div class="toc-inner" markdown="1">
+<div class="toc-bar"><span class="toc-label" id="toc-label">Contents</span><span class="toc-cmd" aria-hidden="true">$ {{ toc_cmd | escape }}</span></div>
+
+1. TOC
+{:toc}
+
+</div>
+</nav>
+<script src="{{ '/assets/js/toc.js' | relative_url }}" defer></script>

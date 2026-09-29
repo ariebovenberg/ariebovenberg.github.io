@@ -1,0 +1,16 @@
+---
+permalink: /talks
+layout: list
+title: Talks
+nav: talks
+prompt: ls talks/
+intro: &intro Conference talks, with links to the recordings
+description: *intro
+---
+<ol class="entries">
+{%- for talk in site.data.talks %}
+  {%- capture meta %}<span>{{ talk.event }}</span><a href="{{ talk.video }}">▶&#xFE0E; watch</a>{% if talk.slides %}<a href="{{ talk.slides }}">slides</a>{% endif %}{% endcapture -%}
+  {%- capture summary %}{% include inline-md.html text=talk.summary %}{% endcapture -%}
+  {%- include entry.html aside=talk.year href=talk.video title=talk.title summary=summary meta=meta level=2 %}
+{%- endfor %}
+</ol>

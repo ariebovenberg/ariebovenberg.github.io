@@ -2,6 +2,8 @@
 layout: post
 title:  "Ten Python datetime pitfalls, and what libraries are (not) doing about it"
 date:   2024-01-20
+toc_cmd: "grep '^## ' datetime-pitfalls.md"
+tags: [python, datetime]
 ---
 
 It's no secret that the Python datetime library has its quirks.
@@ -12,37 +14,10 @@ I created a [new library](https://github.com/ariebovenberg/whenever) to explore 
 💬 Discuss this post [on Reddit](https://www.reddit.com/r/Python/comments/1ag6uxc/ten_python_datetime_pitfalls_and_what_libraries/)
 or [Hacker News](https://news.ycombinator.com/item?id=39417231).
 
-<div class="toc" markdown="1">
-
-### Contents
-
-**Before we start**
-
-- [What's a pitfall?](#whats-a-pitfall)
-- [Libraries considered](#libraries-considered)
-
-**The pitfalls**
-
-1. [Incompatible concepts are squeezed into one class](#1-incompatible-concepts-are-squeezed-into-one-class)
-2. [Operators ignore Daylight Saving Time (DST)](#2-operators-ignore-daylight-saving-time-dst)
-3. [The meaning of "naïve" is inconsistent](#3-the-meaning-of-naïve-is-inconsistent)
-4. [Non-existent datetimes pass silently](#4-non-existent-datetimes-pass-silently)
-5. [Guessing in the face of ambiguity](#5-guessing-in-the-face-of-ambiguity)
-6. [Disambiguation breaks equality](#6-disambiguation-breaks-equality)
-7. [Inconsistent equality within timezone](#7-inconsistent-equality-within-timezone)
-8. [Datetime inherits from date](#8-datetime-inherits-from-date)
-9. [`datetime.timezone` isn't enough for timezone support](#9-datetimetimezone-isnt-enough-for-timezone-support)
-10. [The local timezone is DST-unaware](#10-the-local-timezone-is-dst-unaware)
-
-**Takeaways**
-
-- [Datetime library scorecard](#datetime-library-scorecard)
-- [Why should you care?](#why-should-you-care)
-- [Imagining a solution](#imagining-a-solution)
-
-</div>
+{% include toc.html numbered=true %}
 
 ## What's a pitfall?
+{: .no_toc}
 
 Two notes before we start:
 
@@ -54,6 +29,7 @@ Two notes before we start:
   Adding big features over 20 years—without breaking compatibility—isn't easy.
 
 ## Libraries considered
+{: .no_toc}
 
 With that out of the way, these are the third-party datetime
 libraries I'm looking at in this post:
@@ -77,7 +53,11 @@ These libraries I'm *not* looking at:
 
 Now: on to the pitfalls!
 
-## 1. Incompatible concepts are squeezed into one class
+<div class="numbered" markdown="1">
+
+<div id="1-incompatible-concepts-are-squeezed-into-one-class"></div>
+
+## Incompatible concepts are squeezed into one class
 
 It's an infamous pain point that a `datetime` instance can be either naïve or aware,
 and that they can't be mixed.
@@ -98,13 +78,15 @@ While compatible,
 the semantics of UTC/offset and IANA timezones are notably different when
 it comes to ambiguity, for example.
 
-#### What's being done about it?
+### What's being done about it?
 
-- :heavy_check_mark: `heliclockter` has separate classes for local, zoned, and UTC datetimes.
-- :heavy_check_mark: `DateType` allows type-checkers to distinguish naïve or aware datetimes
-- :x: `arrow` and `pendulum` still have one class for naïve and aware.
+- {% include mark.html s="yes" %} `heliclockter` has separate classes for local, zoned, and UTC datetimes.
+- {% include mark.html s="yes" %} `DateType` allows type-checkers to distinguish naïve or aware datetimes
+- {% include mark.html s="no" %} `arrow` and `pendulum` still have one class for naïve and aware.
 
-## 2. Operators ignore Daylight Saving Time (DST)
+<div id="2-operators-ignore-daylight-saving-time-dst"></div>
+
+## Operators ignore Daylight Saving Time (DST)
 
 Given that `datetime` supports timezones with DST transitions,
 you'd reasonably expect that the `+/-` operators would take
@@ -121,12 +103,14 @@ wake_up = datetime(2023, 3, 26, 7, tzinfo=paris)
 sleep = wake_up - bedtime
 ```
 
-#### What's being done about it?
+### What's being done about it?
 
-- :heavy_check_mark: `pendulum` explicitly fixes this issue
-- :x: `heliclockter`, `arrow`, and `DateType` don't address it
+- {% include mark.html s="yes" %} `pendulum` explicitly fixes this issue
+- {% include mark.html s="no" %} `heliclockter`, `arrow`, and `DateType` don't address it
 
-## 3. The meaning of "naïve" is inconsistent
+<div id="3-the-meaning-of-naïve-is-inconsistent"></div>
+
+## The meaning of "naïve" is inconsistent
 
 In various parts of the standard library, "naïve" datetimes are interpreted
 differently. Ostensibly, "naïve" means "detached from the real world",
@@ -151,13 +135,15 @@ datetime.utcnow()
 d >= datetime.now(UTC)
 ```
 
-#### What's being done about it?
+### What's being done about it?
 
-- :x: While `pendulum` and `arrow` do discourage using naïve datetimes,
+- {% include mark.html s="no" %} While `pendulum` and `arrow` do discourage using naïve datetimes,
   they still support the same inconsistent semantics.
-- :x: `DateType` and `heliclockter` don't address this
+- {% include mark.html s="no" %} `DateType` and `heliclockter` don't address this
 
-## 4. Non-existent datetimes pass silently
+<div id="4-non-existent-datetimes-pass-silently"></div>
+
+## Non-existent datetimes pass silently
 
 When the clock in a timezone is set forward, a "gap" is created. For example,
 if DST moves the clock forward from 2am to 3am, the time 2:30am is skipped.
@@ -173,13 +159,15 @@ t = d.timestamp()
 datetime.fromtimestamp(t, tz=paris) == d  # False!?
 ```
 
-#### What's being done about it?
+### What's being done about it?
 
-- :x: `pendulum` replaces the current silent behavior with another: it
+- {% include mark.html s="no" %} `pendulum` replaces the current silent behavior with another: it
   fast-forwards to a valid time [without warning](https://github.com/sdispater/pendulum/issues/697).
-- :x: `arrow`, `DateType` and `heliclockter` don't address this issue
+- {% include mark.html s="no" %} `arrow`, `DateType` and `heliclockter` don't address this issue
 
-## 5. Guessing in the face of ambiguity
+<div id="5-guessing-in-the-face-of-ambiguity"></div>
+
+## Guessing in the face of ambiguity
 
 When the clock in a timezone is set backwards, an ambiguity is created.
 For example, if DST sets the clock one hour back at 3am, the time 2:30am exists
@@ -198,13 +186,15 @@ which has the effect of silently assuming that you want the earlier occurrence[^
 d = datetime(2023, 10, 29, 2, 30, tzinfo=paris)
 ```
 
-#### What's being done about it?
+### What's being done about it?
 
-- :x: `pendulum` also guesses, but rather arbitrarily decides that ``1``
+- {% include mark.html s="no" %} `pendulum` also guesses, but rather arbitrarily decides that ``1``
   is the better default[^2].
-- :x: `arrow`, `DateType` and `heliclockter` don't address the issue.
+- {% include mark.html s="no" %} `arrow`, `DateType` and `heliclockter` don't address the issue.
 
-## 6. Disambiguation breaks equality
+<div id="6-disambiguation-breaks-equality"></div>
+
+## Disambiguation breaks equality
 
 Even though `fold` was introduced to disambiguate times,
 comparisons of disambiguated times between timezones *always* evaluate false due to
@@ -219,11 +209,13 @@ d_utc.timestamp() == d.timestamp()  # True: same moment in time
 d_utc == d  # False!?
 ```
 
-#### What's being done about it?
+### What's being done about it?
 
-- :x: None of the libraries addresses this issue
+- {% include mark.html s="no" %} None of the libraries addresses this issue
 
-## 7. Inconsistent equality within timezone
+<div id="7-inconsistent-equality-within-timezone"></div>
+
+## Inconsistent equality within timezone
 
 In a mirror image of the previous pitfall, there is a false positive
 when comparing two datetimes with the exact same `tzinfo` object.
@@ -249,11 +241,13 @@ later2 = later.replace(tzinfo=tz.gettz("Europe/Paris"))
 earlier == later2  # now false
 ```
 
-#### What's being done about it?
+### What's being done about it?
 
-- :x: None of the libraries addresses this issue
+- {% include mark.html s="no" %} None of the libraries addresses this issue
 
-## 8. Datetime inherits from date
+<div id="8-datetime-inherits-from-date"></div>
+
+## Datetime inherits from date
 
 You may be surprised to know that `datetime` is a subclass of `date`.
 This doesn't seem problematic at first, but it leads to odd behavior.
@@ -274,14 +268,16 @@ def is_future(d: date) -> bool:
 datetime.today()  # fun exercise: what does this return?
 ```
 
-#### What's being done about it?
+### What's being done about it?
 
-- :heavy_check_mark: `DateType` was explicitly developed to fix this inheritance relationship
+- {% include mark.html s="yes" %} `DateType` was explicitly developed to fix this inheritance relationship
   at type-checking time.
-- :x: `arrow`, `pendulum`, and `heliclockter` don't address the issue.
+- {% include mark.html s="no" %} `arrow`, `pendulum`, and `heliclockter` don't address the issue.
   Their datetime classes all inherit from `datetime` (and thus also `date`).
 
-## 9. `datetime.timezone` isn't enough for timezone support
+<div id="9-datetimetimezone-isnt-enough-for-timezone-support"></div>
+
+## `datetime.timezone` isn't enough for timezone support
 
 OK—so this is maybe something you learn once and then never forget.
 But it's still confusing that `datetime.timezone` is only for fixed offsets,
@@ -299,11 +295,13 @@ paris_tz = timezone(timedelta(hours=1), "CET")
 paris_tz = ZoneInfo("Europe/Paris")
 ```
 
-- :heavy_check_mark: Both `arrow` and `pendulum` side-step this issue by specifying
+- {% include mark.html s="yes" %} Both `arrow` and `pendulum` side-step this issue by specifying
   timezones as strings instead of requiring special class instance.
-- :x: `heliclockter` and `DateType` don't address this issue
+- {% include mark.html s="no" %} `heliclockter` and `DateType` don't address this issue
 
-## 10. The local timezone is DST-unaware
+<div id="10-the-local-timezone-is-dst-unaware"></div>
+
+## The local timezone is DST-unaware
 
 Calling `astimezone()` without arguments gives you the time in the local system
 timezone. However, it returns it as a fixed offset (`datetime.timezone`) instead of a
@@ -320,32 +318,36 @@ print(my_tz)  # timezone(offset=timedelta(hours=1), "CET")
 datetime(2023, 7, 1, tzinfo=my_tz)  # not valid for summer!
 ```
 
-#### What's being done about it?
+### What's being done about it?
 
-- :heavy_check_mark: `pendulum` and `arrow` have methods to convert to the full local timezone.
-- :x: `heliclockter` has a local datetime type with the same issue,
+- {% include mark.html s="yes" %} `pendulum` and `arrow` have methods to convert to the full local timezone.
+- {% include mark.html s="no" %} `heliclockter` has a local datetime type with the same issue,
   although a fix is in the works.
-- :x: `DateType` doesn't address this issue
+- {% include mark.html s="no" %} `DateType` doesn't address this issue
 
+
+</div>
 
 ## Datetime library scorecard
+{: .no_toc}
 
-Below is a summary of how the libraries address the pitfalls (:heavy_check_mark:) or not (:x:).
+Below is a summary of how the libraries address the pitfalls ({% include mark.html s="yes" %}) or not ({% include mark.html s="no" %}).
 
 | Pitfall                     | Arrow | Pendulum | DateType | Heliclockter |
-|-----------------------------|-------|----------|----------|--------------|
-| aware/naïve in one class    | :x:     | :x:        | :heavy_check_mark:        | :heavy_check_mark:            |
-| Operators ignore DST        | :x:     | :heavy_check_mark:        | :x:        | :x:            |
-| Unclear "naïve" semantics   | :x:     | :x:        | :x:        | :x:            |
-| Silent non-existence        | :x:     | :x:        | :x:        | :x:            |
-| Guesses on ambiguity        | :x:     | :x:        | :x:        | :x:            |
-| Disambiguation breaks equality | :x:     | :x:        | :x:        | :x:            |
-| Inconsistent equality within zone | :x:     | :x:        | :x:        | :x:            |
-| datetime inherits from date | :x:     | :x:        | :heavy_check_mark:        | :x:            |
-| `timezone` isn't enough for timezone support | :heavy_check_mark:     | :heavy_check_mark:        | :x:        | :x:            |
-| DST-unaware local timezone  | :heavy_check_mark:     | :heavy_check_mark:        | :x:        | :x:            |
+|-----------------------------|:-----:|:--------:|:--------:|:------------:|
+| aware/naïve in one class | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="yes" %} | {% include mark.html s="yes" %} |
+| Operators ignore DST | {% include mark.html s="no" %} | {% include mark.html s="yes" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} |
+| Unclear "naïve" semantics | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} |
+| Silent non-existence | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} |
+| Guesses on ambiguity | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} |
+| Disambiguation breaks equality | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} |
+| Inconsistent equality within zone | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} |
+| datetime inherits from date | {% include mark.html s="no" %} | {% include mark.html s="no" %} | {% include mark.html s="yes" %} | {% include mark.html s="no" %} |
+| `timezone` isn't enough for timezone support | {% include mark.html s="yes" %} | {% include mark.html s="yes" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} |
+| DST-unaware local timezone | {% include mark.html s="yes" %} | {% include mark.html s="yes" %} | {% include mark.html s="no" %} | {% include mark.html s="no" %} |
 
 ## Why should you care?
+{: .no_toc}
 
 The pitfalls roughly fall into two categories:
 *confusing design* and *surprising edge cases*.
@@ -381,6 +383,7 @@ While this sentiment is understandable, I'd argue that the opposite is true:
   There is no reason why these pitfalls shouldn't be corrected.
 
 ## Imagining a solution
+{: .no_toc}
 
 Inspired by these findings, I created a
 [new library](https://github.com/ariebovenberg/whenever) to explore
@@ -434,9 +437,10 @@ Here is how it addresses the pitfalls:
 9. IANA timezones are used everywhere, no separate classes are needed.
 10. Local datetimes handle DST transitions correctly.
 
-[Feedback is welcome!](https://github.com/ariebovenberg/whenever) :star2:
+[Feedback is welcome!](https://github.com/ariebovenberg/whenever)
 
 ## Changelog
+{: .no_toc}
 
 See the [git history](https://github.com/ariebovenberg/ariebovenberg.github.io/commits/main/_posts/2024-01-20-python-datetime-pitfalls.md)
 for exact changes to this article since initial publication.
@@ -464,7 +468,7 @@ for exact changes to this article since initial publication.
 
 ### 2024-02-18 21:10:00+01:00
 
-- A better solution for emoji :tada:
+- A better solution for emoji
 
 ### 2024-10-03 19:15:00+02:00
 

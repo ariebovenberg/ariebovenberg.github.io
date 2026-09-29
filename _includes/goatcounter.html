@@ -1,0 +1,6 @@
+{%- comment -%}
+  Page-view counting (GoatCounter, cookieless). count.js also records referrer and
+  screen size; without JS the pixel still counts the view.
+{%- endcomment -%}
+<script data-goatcounter="{{ site.goatcounter }}" async src="https://gc.zgo.at/count.js"></script>
+<noscript><img src="{{ site.goatcounter }}?p={{ page.url | url_encode }}" alt="" width="1" height="1" style="position:absolute"></noscript>

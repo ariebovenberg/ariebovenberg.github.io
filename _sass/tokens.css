@@ -1,0 +1,123 @@
+/*
+ * Design tokens for dev.arie.bovenberg.net ("Phosphor" direction).
+ * Single source of truth for colour, type and spacing.
+ * Light = default; dark follows the OS via prefers-color-scheme. No JS toggle.
+ * Palette is gruvbox-derived; light-mode accents/syntax are darkened where needed
+ * to meet WCAG AA (>= 4.5:1) on their actual background.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* ── Surfaces & text (light, "bone") ── */
+  --bg: #eeebe3;
+  --code-bg: #e4e0d5;
+  --code-bar: #dcd8cc;
+  --fg: #3c3836;
+  --strong: #282828;
+  --lede: #504945;
+  --muted: #665c54;
+  --rule: #cfc8b8;
+
+  /* ── Accent: amber ── */
+  --accent: #8a5806;
+  --cursor: rgb(138 88 6 / 0.4);
+
+  /* ── Prompt line ── */
+  --prompt-user: #625e0a;
+  --prompt-path: #076678;
+
+  /* ── Syntax (Rouge token classes map onto these in base.css) ── */
+  --sx-keyword: #9d0006;   /* red */
+  --sx-function: #625e0a;  /* green */
+  --sx-type: #855505;      /* yellow */
+  --sx-string: #356649;    /* aqua */
+  --sx-number: #8f3f71;    /* purple */
+  --sx-builtin: #af3a03;   /* orange */
+  --sx-constant: #8f3f71;
+  --sx-comment: #665c54;
+  --sx-error: #9d0006;
+
+  /* ── Aliases: status marks and list dots (alias palette tokens, so both themes follow) ── */
+  --status-yes: #3c6b22;              /* green; --sx-function reads olive here, too close to grey */
+  --status-partly: var(--sx-type);    /* amber */
+  /* "no" is a quiet grey at 3:1 (WCAG non-text contrast): marks are role="img" graphics
+     with spoken names, and the quiet [ ] makes the bold [x]/[~] stand out. */
+  --status-no: #837a72;
+  --c-red: var(--sx-keyword);
+  --c-orange: var(--sx-builtin);
+  --c-yellow: var(--sx-type);
+  --c-green: var(--sx-function);
+  --c-aqua: var(--sx-string);
+  --c-blue: var(--prompt-path);
+  --c-purple: var(--sx-number);
+
+  /* ── Type ── */
+  --font-mono: "IBM Plex Mono", "IBM Plex Mono Menlo", "IBM Plex Mono Consolas", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-serif: "IBM Plex Serif", "IBM Plex Serif Georgia", Charter, "Bitstream Charter", Georgia, serif;
+
+  --text-body: 1.1875rem;   /* 19px */
+  --text-lede: 1.3125rem;   /* 21px */
+  --text-small: 0.875rem;   /* 14px */
+  --text-meta: 0.8125rem;   /* 13px */
+  --text-code: 0.9375rem;   /* 15px */
+  --text-nav: 0.9375rem;    /* 15px */
+  --text-h1: 2.375rem;      /* 38px */
+  --text-h2: 1.375rem;      /* 22px */
+  --text-list-title: 1.3125rem; /* 21px */
+
+  --leading-body: 1.7;
+  --leading-tight: 1.2;
+  --leading-code: 1.6;
+
+  /* ── Layout ── */
+  --measure: 45rem;         /* 720px text column */
+  --gutter: 1.25rem;        /* side padding on narrow screens */
+  --gap-section: 5rem;      /* header → content */
+  --toc-width: 14rem;       /* TOC in the right margin (≥ 82rem) */
+  --toc-gap: 3rem;          /* text column → margin TOC */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1d2021;
+    --code-bg: #282828;
+    --code-bar: #32302f;
+    --fg: #ebdbb2;
+    --strong: #fbf1c7;
+    --lede: #d5c4a1;
+    --muted: #a89984;
+    --rule: #504945;
+
+    --accent: #fabd2f;
+    --cursor: rgb(250 189 47 / 0.45);
+
+    --prompt-user: #b8bb26;
+    --prompt-path: #83a598;
+
+    --sx-keyword: #fb5741;
+    --sx-function: #b8bb26;
+    --sx-type: #fabd2f;
+    --sx-string: #8ec07c;
+    --sx-number: #d3869b;
+    --sx-builtin: #fe8019;
+    --sx-constant: #d3869b;
+    --sx-comment: #a89984;
+    --sx-error: #fb5741;
+
+    --status-yes: var(--sx-function);
+    --status-no: #7c7365;
+  }
+}
+
+@media (max-width: 40rem) {
+  :root {
+    --text-body: 1.125rem;  /* 18px */
+    --text-lede: 1.1875rem;
+    --text-code: 0.875rem;
+    --text-h1: 1.75rem;
+    --text-h2: 1.25rem;
+    --text-list-title: 1.1875rem;
+    --gap-section: 3rem;
+  }
+}

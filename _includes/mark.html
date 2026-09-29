@@ -1,0 +1,10 @@
+{%- comment -%}
+  Status mark for comparison tables: {% include mark.html s="yes" %} / "partly" / "no".
+  ASCII checkboxes: [x] / [~] / [ ]. Shape carries the meaning (filled vs empty box),
+  colour only reinforces it. The accessible name is the word, not the glyphs.
+{%- endcomment -%}
+{%- case include.s -%}
+{%- when "yes" -%}<span class="mark mark-yes" role="img" aria-label="yes">[x]</span>
+{%- when "partly" -%}<span class="mark mark-partly" role="img" aria-label="partly">[~]</span>
+{%- when "no" -%}<span class="mark mark-no" role="img" aria-label="no">[&nbsp;]</span>
+{%- endcase -%}
