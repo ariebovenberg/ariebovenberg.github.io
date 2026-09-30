@@ -59,9 +59,16 @@ a:hover { text-decoration-thickness: 2px; }
 .site-nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
 .site-nav a { color: var(--muted); text-decoration: none; }
 .site-nav a:hover { color: var(--fg); }
+.site-nav a { position: relative; }
 .site-nav a[aria-current] { color: var(--accent); }
-.site-nav a[aria-current]::before { content: "["; }
-.site-nav a[aria-current]::after  { content: "]"; }
+/* The brackets hang into the gaps, outside the text flow, so marking a link
+   current never moves the others. The second `content` gives them empty alt
+   text (aria-current already says "current page"); older browsers drop it
+   and keep the first. */
+.site-nav a[aria-current]::before,
+.site-nav a[aria-current]::after { position: absolute; }
+.site-nav a[aria-current]::before { content: "["; content: "[" / ""; right: 100%; }
+.site-nav a[aria-current]::after  { content: "]"; content: "]" / ""; left: 100%; }
 
 /* ── Titles ── */
 .title {
