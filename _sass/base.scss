@@ -7,7 +7,13 @@
 
 /* ── Reset-ish ── */
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Reserve the scrollbar's width on every page, so the centred column sits in
+     the same place whether or not a page is long enough to scroll. */
+  scrollbar-gutter: stable;
+}
 body {
   margin: 0;
   background: var(--bg);
