@@ -23,7 +23,7 @@ Personal programming blog: Jekyll, deployed to GitHub Pages by `.github/workflow
 ## Writing posts
 
 - Front matter: `title` and `description` may contain inline Markdown (use backticks for `__init__`-style names); `tags:` is a list, and each tag's list-page dot hue comes from `_data/colors.yml` (unmapped tags get a muted dot; keep ≤ 6 hues).
-- The first paragraph is the lede. `h2`/`h3` only; no `h4`.
+- `h2`/`h3` only; no `h4`.
 - **Code blocks:** fence with the language. A filename bar appears only when you add `{: data-title="example.py"}` on the line after the fence. Rouge has no `pycon` lexer: fence a REPL session as ```` ```console?lang=python&prompt=>>>,... ````.
 - **Tables** are wrapped automatically into scrollable slabs. Status cells use `{% include mark.html s="yes|partly|no" %}` (renders `[x]` / `[~]` / `[ ]`).
 - **Table of contents** is opt-in: `{% include toc.html %}`, or `numbered=true` for a post with numbered sections. Mark `h2`s that shouldn't appear with `{: .no_toc}`. Override the grep line with front matter `toc_cmd`.
