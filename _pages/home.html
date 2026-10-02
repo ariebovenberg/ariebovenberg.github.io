@@ -18,7 +18,7 @@ description: *intro
     {%- if post.description -%}
       {%- capture summary %}{% include inline-md.html text=post.description %}{% endcapture -%}
     {%- else -%}
-      {%- assign summary = post.excerpt | strip_html | strip | normalize_whitespace | smartify -%}
+      {%- assign summary = post.excerpt | remove: '<p>' | remove: '</p>' | strip -%}
     {%- endif -%}
     {%- include entry.html aside=aside href=post.url title=post.title summary=summary meta=meta level=3 %}
   {%- endfor %}

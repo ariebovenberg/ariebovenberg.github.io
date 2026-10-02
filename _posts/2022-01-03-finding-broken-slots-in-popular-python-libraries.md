@@ -3,7 +3,6 @@ layout: post
 title:  "Finding broken slots in popular Python libraries (and so can you!)"
 date:   2022-01-03
 tags: [python, performance]
-description: "`__slots__` only save memory if every base class has them too. I built slotscheck to catch broken slots, and found them in pandas, SQLAlchemy, and more."
 ---
 
 Adding `__slots__` to a class in Python is a great way to reduce memory usage.

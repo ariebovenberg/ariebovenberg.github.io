@@ -3,7 +3,6 @@ layout: post
 title:  "The curious case of Pydantic and the 1970s timestamps"
 date:   2024-01-08
 tags: [python, pydantic, datetime]
-description: "Pydantic guesses whether Unix timestamps are in seconds or milliseconds. For dates in the 1970s it guesses wrong, and Apollo 13 launches in 2245."
 ---
 
 When parsing Unix timestamps, Pydantic
