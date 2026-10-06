@@ -10,8 +10,8 @@ Its `+` operator is unusual, even for a datetime library:
 when you add a `timedelta` to a Pendulum `DateTime`,
 it consults the *call stack* to decide which answer to give you.
 What? And why?
-The hack itself is on its way out, but the design that led to it isn't.
-That's what matters for your code.
+The hack itself is on its way out,
+but the design behind it still matters for your code.
 
 Here's the [`__add__` method](https://github.com/python-pendulum/pendulum/blob/aea611d7a1c15ed0da56505c3f370fe4446ba733/src/pendulum/datetime.py#L1237-L1245) from Pendulum 3.2.0, the latest release at the time of writing,[^version]
 which overrides the standard library's `datetime.__add__()`:
