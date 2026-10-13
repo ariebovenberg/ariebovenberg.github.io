@@ -6,12 +6,17 @@ tags: [python, datetime]
 ---
 
 [Pendulum](https://pypi.org/project/pendulum/) is a popular Python library for working with datetimes.
-Its `+` operator is unusual, even for a datetime library:
-when you add a `timedelta` to a Pendulum `DateTime`,
-it consults the *call stack* to decide which answer to give you.
+Until version 3.3, its `+` operator was unusual, even for a datetime library:
+when you added a `timedelta` to a Pendulum `DateTime`,
+it consulted the *call stack* to decide which answer to give you.
 What? And why?
-The hack itself is on its way out,
+The hack itself is gone now,
 but the design behind it still has impact on your code.
+
+*Update (13 October 2026): Pendulum 3.3 has removed the call-stack check,
+using the fix described [below](#did-pendulum-have-to).
+The rest of this post describes 3.2.0, and its main point still stands:
+the design behind the hack hasn't changed.*
 
 Here's the [`__add__` method](https://github.com/python-pendulum/pendulum/blob/aea611d7a1c15ed0da56505c3f370fe4446ba733/src/pendulum/datetime.py#L1237-L1245) from Pendulum 3.2.0, the latest release at the time of writing,[^version]
 which overrides the standard library's `datetime.__add__()`:
@@ -124,7 +129,7 @@ Pendulum's hard-coded check is fragile: it covers only one name,
 and relies on a precise call stack out of Pendulum's control.
 Any *other* code that expects the standard library's arithmetic gets Pendulum's instead.
 Converting to a `dateutil` time zone, for example, goes through a different call stack,
-returning a the result that's silently naive, and off by the UTC offset
+returning a result that's silently naive, and off by the UTC offset
 ([#820](https://github.com/python-pendulum/pendulum/issues/820)):
 
 ```console?lang=python&prompt=>>>,...
@@ -194,7 +199,7 @@ There's always another caller, another input, another time zone that wasn't anti
 ## Did Pendulum *have* to?
 
 So, did Pendulum *have* to write this `+` operator?
-The `fromutc()` conflict certainly required a workaround,
+The `fromutc()` conflict certainly required a workaround,[^v3]
 but walking the call stack isn't the only option.
 
 The cleanest workaround removes the guess altogether:
@@ -204,12 +209,12 @@ and wrap the result again afterwards.
 ```python
 def astimezone(self, tz=None):
     plain = datetime(self.year, ..., tzinfo=self.tzinfo, fold=self.fold)
-    dt = plain.astimezone(tz)  # only rurns the stdlib's `+`
+    dt = plain.astimezone(tz)  # only runs the stdlib's `+`
     return self.__class__(dt.year, ..., tzinfo=dt.tzinfo, fold=dt.fold)
 ```
 
 I proposed this as [a pull request](https://github.com/python-pendulum/pendulum/pull/1032),
-which Pendulum has merged; it should be in the next release.
+which shipped in Pendulum 3.3.
 
 With that, `__add__` has nothing left to guess,
 and the bugs above disappear.
@@ -224,8 +229,8 @@ it picked a rather expensive way out.[^cheap]
 
 None of this fixes the underlying problem, though.
 There's no workaround that can reach all the code Pendulum *doesn't* control.
-Anywhere you pass Pendulum's `DateTime` where `datetime` is expected,
-now gets Pendulum's `+` behavior---whether it expects it or not.
+Any code that expects a `datetime` but is handed Pendulum's `DateTime`
+gets Pendulum's `+`---whether it's ready for it or not.
 A minimal example:
 
 ```console?lang=python&prompt=>>>,...
@@ -236,7 +241,7 @@ DateTime(2024, 7, 1, 12, 0, 0)     # naive — and not 14:00
 
 The only way to fix this would be for Pendulum to break one
 of its two promises: drop its DST-aware arithmetic,
-or stop being a drop-in subclass. [^subclasses]
+or stop being a drop-in subclass.[^subclasses]
 
 ## What now?
 
@@ -248,7 +253,7 @@ If you already use Pendulum, there's no need to panic. But watch out when you:
 - parse untrusted or incomplete strings;
 - pass Pendulum values where a `datetime` is expected.
 
-The next release should fix the first two, and make `+` less slow.
+Pendulum 3.3 fixes the first two and makes `+` less slow, so it's worth upgrading.
 The last two follow from Pendulum's design,
 and can't be fixed without breaking changes.
 
@@ -293,7 +298,7 @@ Know an even more cursed operator in Python? I'd love to hear about it!
     Elapsed time is the norm in modern datetime libraries, but wall-clock
     arithmetic can be useful too in some contexts.
 
-[^v3]: That was in version 3.0, released in December 2023, before the
+[^v3]: The conflict arrived in version 3.0, released in December 2023, before the
     project's current maintainers took over in 2025. Before 3.0, Pendulum shipped
     its own time zone implementation, avoiding the issue.
 
@@ -301,11 +306,11 @@ Know an even more cursed operator in Python? I'd love to hear about it!
     could be made cheaper using `sys._getframe(1).f_code.co_name`,
     which reads the caller's name without `traceback`'s additional overhead.
 
-[^modern]: It's built into Java, ([`java.time`](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html)),
+[^modern]: It's built into Java ([`java.time`](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html))
     and into JavaScript ([Temporal](https://tc39.es/proposal-temporal/docs/),
     since ECMAScript 2026). In Rust, [Jiff](https://github.com/BurntSushi/jiff)
     is quickly gaining adoption, and in C#, [NodaTime](https://nodatime.org/)
-    is the  alternative to its standard library.
+    is the alternative to its standard library.
 
 [^subclasses]: `DateTime` isn't the only subclass
     where the drop-in promise conflicts with changed behavior:
